@@ -34,7 +34,15 @@ public class Worker {
 			options.timeout = 500;
 			socket = IO.socket(url, options);
 			System.out.println("Connected");
-			socket.emit("worker", 659812);
+			
+			socket.on("welcome", new Emitter.Listener() {
+				@Override
+				public void call(Object... args) {
+					System.out.println(args[0]); // world
+					socket.emit("worker", 659812);
+				}
+			});
+			
 			socket.on("message", new Emitter.Listener() {
 				@Override
 				public void call(Object... args) {
