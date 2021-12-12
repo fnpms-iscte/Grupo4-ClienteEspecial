@@ -1,7 +1,6 @@
 package Projeto3.Worker;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URISyntaxException;
 
 import io.socket.client.IO;
@@ -11,10 +10,16 @@ import io.socket.emitter.Emitter;
 import org.apache.commons.io.FileUtils;
 import org.json.CDL;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.google.gson.JsonObject;
+
 public class Worker {
+
+	private File file;
+	private Socket socket;
+	
+	
 
 	public void connection() {
 		String url = "http://localhost:3000/";
@@ -27,7 +32,7 @@ public class Worker {
 			options.reconnectionDelay = 1000;
 			// Connection timeout (ms)
 			options.timeout = 500;
-			Socket socket = IO.socket(url, options);
+			socket = IO.socket(url, options);
 			System.out.println("Connected");
 			socket.emit("worker", 659812);
 			socket.on("message", new Emitter.Listener() {
@@ -45,6 +50,9 @@ public class Worker {
 						System.out.println(args[0].getClass());
 						JSONObject body = (JSONObject) args[0];
 						upload_jsons(body);
+						
+						send_timetables(Jsonteste.jsonObject);
+						
 
 					} catch (Exception e) {
 						// TODO: handle exception
@@ -62,30 +70,27 @@ public class Worker {
 	public static void main(String[] args) {
 		Worker w = new Worker();
 		w.connection();
-		
+
 	}
 
 	public void upload_jsons(JSONObject body) throws Exception {
 		JSONArray files = body.getJSONArray("files");
-		// System.out.println(files);
 		for (int i = 0; i < files.length(); i++) {
-			JSONArray pessoas = files.getJSONArray(i);	
-			// File dir = new File("c:uploads");
-			File file = new File("uploads/test.csv");
-			// dir.mkdir();
+			JSONArray pessoas = files.getJSONArray(i);
+			if (i == 0) {
+				file = new File("uploads/" + body.getString("id") + "_rooms.csv");
+			} else if (i == 1) {
+				file = new File("uploads/" + body.getString("id") + "_lectures.csv");
+			}
 			file.createNewFile();
 			String csv = CDL.toString(pessoas);
 			FileUtils.writeStringToFile(file, csv, "ISO-8859-1");
-			// System.out.println("Data has been Sucessfully Writeen to "+ file);
-			// System.out.println(csv);
-			for (int j = 0; j < pessoas.length(); j++) {
-				JSONObject pessoa = pessoas.getJSONObject(j);
-				System.out.println("Pessoa: " + pessoa.toString());
-				;
-			}
-			// System.out.println(pessoas.toString());
 		}
-
 	}
-	
+
+	public void send_timetables(JsonObject body) {
+		socket.emit("results", body);
+		System.out.println("Resultados enviados ...");
+	}
+
 }
