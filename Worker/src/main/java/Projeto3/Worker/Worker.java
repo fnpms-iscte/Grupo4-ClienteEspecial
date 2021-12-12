@@ -18,8 +18,6 @@ public class Worker {
 
 	private File file;
 	private Socket socket;
-	
-	
 
 	public void connection() {
 		String url = "http://localhost:3000/";
@@ -34,7 +32,7 @@ public class Worker {
 			options.timeout = 500;
 			socket = IO.socket(url, options);
 			System.out.println("Connected");
-			
+
 			socket.on("welcome", new Emitter.Listener() {
 				@Override
 				public void call(Object... args) {
@@ -42,7 +40,7 @@ public class Worker {
 					socket.emit("worker", 659812);
 				}
 			});
-			
+
 			socket.on("message", new Emitter.Listener() {
 				@Override
 				public void call(Object... args) {
@@ -58,9 +56,8 @@ public class Worker {
 						System.out.println(args[0].getClass());
 						JSONObject body = (JSONObject) args[0];
 						upload_jsons(body);
-						
-						send_timetables(Jsonteste.jsonObject);
-						
+
+						//send_timetables(Jsonteste.jsonObject);
 
 					} catch (Exception e) {
 						// TODO: handle exception
@@ -82,18 +79,12 @@ public class Worker {
 	}
 
 	public void upload_jsons(JSONObject body) throws Exception {
-		JSONArray files = body.getJSONArray("files");
-		for (int i = 0; i < files.length(); i++) {
-			JSONArray pessoas = files.getJSONArray(i);
-			if (i == 0) {
-				file = new File("uploads/" + body.getString("id") + "_rooms.csv");
-			} else if (i == 1) {
-				file = new File("uploads/" + body.getString("id") + "_lectures.csv");
-			}
-			file.createNewFile();
-			String csv = CDL.toString(pessoas);
-			FileUtils.writeStringToFile(file, csv, "ISO-8859-1");
-		}
+		JSONArray pessoas = body.getJSONArray("file");
+		String id_name = body.getString("name");
+		file = new File("uploads/" + id_name +".csv");
+		file.createNewFile();
+		String csv = CDL.toString(pessoas);
+		FileUtils.writeStringToFile(file, csv, "ISO-8859-1");
 	}
 
 	public void send_timetables(JsonObject body) {
