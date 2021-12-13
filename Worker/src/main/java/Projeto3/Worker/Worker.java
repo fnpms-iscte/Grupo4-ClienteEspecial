@@ -2,6 +2,7 @@ package Projeto3.Worker;
 
 import java.io.File;
 import java.net.URISyntaxException;
+import java.util.concurrent.TimeUnit;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -18,6 +19,7 @@ public class Worker {
 
 	private File file;
 	private Socket socket;
+	private String id = "f6UNfA84GB6q7dpWAAAB";
 
 	public void connection() {
 		String url = "http://localhost:3000/";
@@ -45,6 +47,16 @@ public class Worker {
 				@Override
 				public void call(Object... args) {
 					System.out.println(args[0]); // world
+					Jsonteste a = new Jsonteste(id);
+					try {
+						System.out.println("Sleep 5s");
+						TimeUnit.SECONDS.sleep(5);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+					send_timetables(a.jsonObject);
 				}
 			});
 
@@ -53,11 +65,9 @@ public class Worker {
 				public void call(Object... args) {
 					try {
 
-						System.out.println(args[0].getClass());
+						System.out.println(args[0]);
 						JSONObject body = (JSONObject) args[0];
 						upload_jsons(body);
-
-						//send_timetables(Jsonteste.jsonObject);
 
 					} catch (Exception e) {
 						// TODO: handle exception
@@ -81,7 +91,7 @@ public class Worker {
 	public void upload_jsons(JSONObject body) throws Exception {
 		JSONArray pessoas = body.getJSONArray("file");
 		String id_name = body.getString("name");
-		file = new File("uploads/" + id_name +".csv");
+		file = new File("uploads/" + id_name + ".csv");
 		file.createNewFile();
 		String csv = CDL.toString(pessoas);
 		FileUtils.writeStringToFile(file, csv, "ISO-8859-1");
