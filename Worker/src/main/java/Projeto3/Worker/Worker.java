@@ -3,6 +3,7 @@ package Projeto3.Worker;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import io.socket.client.IO;
@@ -51,16 +52,13 @@ public class Worker {
 				@Override
 				public void call(Object... args) {
 					System.out.println(args[0]); // world
-						//TimeUnit.SECONDS.sleep(5);
-					/*JSONObject body = (JSONObject) args[0];
-					try {
-						//String id = body.getString("id");
-						System.out.println("ID: " + id);
-					} catch (JSONException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}*/
-					//send_timetables(this.a.jsonObject);
+					// TimeUnit.SECONDS.sleep(5);
+					/*
+					 * JSONObject body = (JSONObject) args[0]; try { //String id =
+					 * body.getString("id"); System.out.println("ID: " + id); } catch (JSONException
+					 * e) { // TODO Auto-generated catch block e.printStackTrace(); }
+					 */
+					// send_timetables(this.a.jsonObject);
 				}
 			});
 
@@ -69,11 +67,12 @@ public class Worker {
 				public void call(Object... args) {
 					try {
 
-						//System.out.println(args[0]);
+						System.out.println(args[0]);
 						JSONObject body = (JSONObject) args[0];
 						upload_jsons(body);
-						//System.out.println(body);
+						// System.out.println(body);
 						Jsonteste a = new Jsonteste(body.getString("id"));
+						System.out.println(a.jsonObject + "\n\nfiles to handle\n");
 						send_timetables(a.jsonObject);
 
 					} catch (Exception e) {
@@ -96,49 +95,33 @@ public class Worker {
 	}
 
 	public void upload_jsons(JSONObject body) throws Exception {
-		/*
-		 * JSONArray pessoas = body.getJSONArray("file"); String id_name =
-		 * body.getString("name"); file = new File("uploads/" + id_name + ".csv");
-		 * file.createNewFile(); String csv = CDL.toString(pessoas);
-		 * FileUtils.writeStringToFile(file, csv, "ISO-8859-1"); this.a = new
-		 * Jsonteste(body.getString("id"));
-		 */
+		ArrayList<File>  filesList = new ArrayList<File>();
 		JSONArray files = body.getJSONArray("files");
-		// System.out.println(files);
 		for (int i = 0; i < files.length(); i++) {
 			JSONArray pessoas = files.getJSONArray(i);
-			// File dir = new File("c:uploads");
 			File file;
-			if(i==0) {
-				file = new File("uploads/" + body.getString("id") +"_rooms.csv");
-			}else {
-				file = new File("uploads/" + body.getString("id") +"_lectures.csv");
+			if (i == 0) {
+				file = new File("uploads/" + body.getString("id") + "_rooms.csv");
+				filesList.add(file);
+			} else {
+				file = new File("uploads/" + body.getString("id") + "_lectures.csv");
+				filesList.add(file);
 			}
-			// dir.mkdir();
-
 			file.createNewFile();
-
-			// TODO Auto-generated catch block
-
 			String csv = CDL.toString(pessoas);
-
 			FileUtils.writeStringToFile(file, csv, "ISO-8859-1");
-			// System.out.println("Data has been Sucessfully Writeen to "+ file);
-			// System.out.println(csv);
-
-			// TODO Auto-generated catch block
-
-			/*for (int j = 0; j < pessoas.length(); j++) {
-				JSONObject pessoa = pessoas.getJSONObject(j);
-				System.out.println("Pessoa: " + pessoa.toString());
-				;
-			}*/
-			// System.out.println(pessoas.toString());
+			
+			// Delete files
+			for (File aux : filesList) {
+				aux.delete();
+			}
+			
 		}
+
 	}
 
 	public void send_timetables(JsonObject body) {
-		
+		System.out.println(body + "\n\nsend_timetables\n");
 		socket.emit("results", body);
 		System.out.println("Resultados enviados ...");
 	}
