@@ -18,6 +18,7 @@ import Projeto3.Worker.Models.Room;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -133,7 +134,7 @@ class Worker{
             }
             file.createNewFile();
             String csv = CDL.toString(pessoas);
-            FileUtils.writeStringToFile(file, csv, "UTF8");
+            FileUtils.writeStringToFile(file, csv, StandardCharsets.UTF_8);
             
         }
 
