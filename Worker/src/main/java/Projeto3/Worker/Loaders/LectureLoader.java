@@ -54,19 +54,18 @@ public class LectureLoader {
 			System.out.println(i);
 		}
 
-		final String courseS = tokens[order_headers[0]];
-		System.out.println(order_headers[1] + "---------------");
-		final String name = tokens[order_headers[1]];
-		final String shift = tokens[order_headers[2]];
-		final String class_name = tokens[order_headers[3]];
-		final String n_studentsS = tokens[order_headers[4]];
-		final String Free_SpotsS = tokens[order_headers[5]];
-		final String Capacity_OverflowS = tokens[order_headers[6]];
-		final String week_day = tokens[order_headers[7]];
-		final String startS = tokens[order_headers[8]];
-		final String endS = tokens[order_headers[9]];
-		final String dateS = tokens[order_headers[10]];
-		final String required_room_characteristics = tokens[order_headers[11]];
+		final String courseS = allocate(order_headers[0], tokens);
+		final String name = allocate(order_headers[1], tokens);
+		final String shift = allocate(order_headers[2], tokens);
+		final String class_name = allocate(order_headers[3], tokens);
+		final String n_studentsS = allocate(order_headers[4], tokens);
+		final String Free_SpotsS = allocate(order_headers[5], tokens);
+		final String Capacity_OverflowS = allocate(order_headers[6], tokens);
+		final String week_day = allocate(order_headers[7], tokens);
+		final String startS = allocate(order_headers[8], tokens);
+		final String endS = allocate(order_headers[9], tokens);
+		final String dateS = allocate(order_headers[10], tokens);
+		final String required_room_characteristics = allocate(order_headers[11], tokens);
 
 		// Converting to their correct form
 		final LinkedList<String> course = new LinkedList<>(Arrays.asList(courseS.split(", ")));
@@ -141,5 +140,12 @@ public class LectureLoader {
 		}
 
 		return indexes;
+	}
+
+	private static String allocate(int position, String[] tokens) {
+		String s = "";
+		if (position < tokens.length)
+			s = tokens[position];
+		return s;
 	}
 }
