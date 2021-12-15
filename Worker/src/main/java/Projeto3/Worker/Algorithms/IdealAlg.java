@@ -22,8 +22,11 @@ public class IdealAlg {
 
             //Time interval of the lecture (includes date)
             Interval interval = new Interval(l.getStart_date(),l.getEnd_date());
+
             roomloop:
             for(Room r : capacity_filtered_rooms){
+
+                // if the room has no bookings make one
                 if(r.getLectures_times_booked().isEmpty()){
                         l.setRoom(r);
                         l.setCapacity(r.getNormal_capacity());
@@ -31,16 +34,19 @@ public class IdealAlg {
                         r.addLecture(interval);
                         break roomloop;
                 }
+
+                // checks if the interval of the lecture overlaps with those already booked in the classrom
                 for(Interval i : r.getLectures_times_booked()){
-                    // checks if the interval of the lecture overlaps with those already booked in the classrom
-                    if( !i.overlaps(interval) ){
-                        l.setRoom(r);
-                        l.setCapacity(r.getNormal_capacity());
-                        l.setReal_characteristics(r.getCharacteristicsString());
-                        r.addLecture(interval);
-                        break roomloop;
-                    }
+                    if( i.overlaps(interval) )
+                        continue roomloop;
                 }
+
+                // if the loop isnt broken its because the room has time for the lecture
+                l.setRoom(r);
+                l.setCapacity(r.getNormal_capacity());
+                l.setReal_characteristics(r.getCharacteristicsString());
+                r.addLecture(interval);
+                break roomloop;
             }
         }
     }

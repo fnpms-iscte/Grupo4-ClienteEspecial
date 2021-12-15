@@ -11,23 +11,17 @@ public class RoomAllocationChars extends Metric{
         super("RoomAllocationChars");
     }
     
-    public int evaluate(List<Lecture> LectList){
-        int score = 0;
+    public Double evaluate(List<Lecture> LectList){
+        double score = 0;
+        double count = 0;
         for(Lecture lect : LectList){
-            int count = 0;
-            if(lect.getReal_characteristics() != null){
-                for(String caracter : lect.getReal_characteristics()){
-                    if(lect.getRoom().has_Characteristic(caracter)){
-                        count++;
-                    }
-                }
+            String caracter = lect.getRequired_room_characteristics();
+            if(!caracter.isEmpty()){
+                if(lect.getRoom().getCharacteristicsString().contains(caracter))
+                    score++; 
             }
-            if (count == lect.getRequired_room_characteristics().length()){
-                score++;
-            }
-        
+            count++;
         }
-
-        return score;
+        return (score/count) * 100;
     }
 }

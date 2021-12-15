@@ -23,6 +23,7 @@ public class MiddleAlg {
                     l.setRoom(r);
                     l.setCapacity(r.getNormal_capacity());
                     l.setReal_characteristics(r.getCharacteristicsString());
+                    break;
                 }else 
                     continue;
             }

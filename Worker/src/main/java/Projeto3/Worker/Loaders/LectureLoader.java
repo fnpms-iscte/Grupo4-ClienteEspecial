@@ -1,6 +1,10 @@
 package Projeto3.Worker.Loaders;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -9,18 +13,17 @@ import java.util.LinkedList;
 import com.opencsv.CSVReader;
 
 import org.joda.time.DateTime;
-
 import Projeto3.Worker.Models.Lecture;
 
 public class LectureLoader {
 
-    public static final LinkedList<Lecture> readLecturePath(final String filepath){
+    public static final LinkedList<Lecture> readLecturePath(final File file){
 
         LinkedList<Lecture> lectures = new LinkedList<>();
 
         try {
             //Creates the reader
-            final Reader reader = Files.newBufferedReader(Paths.get(filepath));
+        	final InputStreamReader reader = new InputStreamReader(new FileInputStream(file),Charset.forName("UTF-8"));
             final CSVReader csvReader = new CSVReader(reader);
             
             //Saves the headers names for the correct allocation of values to variables
