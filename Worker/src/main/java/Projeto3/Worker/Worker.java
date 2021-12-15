@@ -7,6 +7,8 @@ import Projeto3.Worker.Algorithms.IdealAlg;
 import Projeto3.Worker.Algorithms.MiddleAlg;
 import Projeto3.Worker.Algorithms.SimpleAlg;
 import Projeto3.Worker.Loaders.LectureLoader;
+import Projeto3.Worker.Loaders.LectureLoader11;
+import Projeto3.Worker.Loaders.RoomLoaderOldddd;
 import Projeto3.Worker.Loaders.RoomLoader;
 import Projeto3.Worker.Metrics.ClassCapacityOver;
 import Projeto3.Worker.Metrics.ClassCapacityUnder;
@@ -87,6 +89,7 @@ class Worker {
 
 						// System.out.println(args[0]);
 						JSONObject body = (JSONObject) args[0];
+
 						// System.out.println(body.toString());
 						upload_jsons(body);
 						// System.out.println(body);
@@ -123,7 +126,7 @@ class Worker {
 			JSONArray pessoas = files.getJSONArray(i);
 			if (i == 0) {
 				JSONObject pessoa = pessoas.getJSONObject(0);
-				System.out.println(pessoa.toString());
+				// System.out.println(pessoa.toString());
 			}
 			File file;
 			if (i == 0) {
@@ -140,10 +143,12 @@ class Worker {
 		}
 
 		// Input: csv
+		System.out.println("antes");
+		List<Room> rooms = new RoomLoader(files.getJSONArray(0)).getRooms();
+		System.out.println("entre Room e Lectures criadas ...");
+		List<Lecture> lectures = new LectureLoader(files.getJSONArray(1)).getLectures();
 
-		List<Room> rooms = RoomLoader.readRoomFile(filesList.get(0));
-		List<Lecture> lectures = LectureLoader.readLecturePath(filesList.get(1));
-
+		System.out.println("Room e Lectures criadas ...");
 		// Metrics Initialization
 		ClassCapacityOver metric1 = new ClassCapacityOver();
 		ClassCapacityUnder metric2 = new ClassCapacityUnder();
@@ -154,6 +159,8 @@ class Worker {
 		MetricList.add(metric2);
 		MetricList.add(metric3);
 
+		System.out.println("Metricas inicializadas ...");
+
 		// Response Initialization
 		List<Response> output = new ArrayList<Response>();
 
@@ -162,6 +169,8 @@ class Worker {
 		List<Lecture> Simple_lectures = new ArrayList<Lecture>();
 		Simple_lectures.addAll(lectures);
 		sa.compute(Simple_lectures, rooms);
+
+		System.out.println("Basico algoritmo ...");
 
 		// Evaluation of metrics
 		Evaluation simple_ev = new Evaluation(Simple_lectures, MetricList);
@@ -180,6 +189,8 @@ class Worker {
 		List<Lecture> Middle_lectures = new ArrayList<Lecture>();
 		Middle_lectures.addAll(lectures);
 		ma.compute(Middle_lectures, rooms);
+
+		System.out.println("Middle alg ...");
 
 		Evaluation middle_ev = new Evaluation(Middle_lectures, MetricList);
 		Response out2 = new Response("Horario2", "Horario2", Middle_lectures, middle_ev.resultList,
@@ -200,15 +211,20 @@ class Worker {
 		Evaluation ideal_ev = new Evaluation(Ideal_lectures, MetricList);
 		Response out3 = new Response("Horario3", "Horario3", Ideal_lectures, ideal_ev.resultList, ideal_ev.bestResult);
 		output.add(out3);
+		
+		
+		System.out.println("Ideal alg ...");
 
 		for (Room r : rooms) {
 			r.clearLecture();
 		}
 
 		ResponseToJSON transfer = new ResponseToJSON();
-
+		
+		//ERRO ---------- JSON---------------------------------------------------------------------------------------------
 		String jsonString = transfer.ResToJSON(output);
-
+		
+		
 		JsonObject jsonResponse = (JsonObject) JsonParser.parseString(jsonString);
 
 		send_timetables(jsonResponse);
@@ -225,5 +241,16 @@ class Worker {
 		System.out.println(body + "\n\nsend_timetables\n");
 		socket.emit("results", body);
 		System.out.println("Resultados enviados ...");
+	}
+	
+	public String generateJSon(ArrayList<Response> output) {
+		String json = "{[";
+		
+		for (Response response : output) {
+			
+		}
+		
+		return json;
+		
 	}
 }

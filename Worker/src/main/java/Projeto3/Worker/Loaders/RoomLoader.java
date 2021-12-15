@@ -1,107 +1,148 @@
 package Projeto3.Worker.Loaders;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 
-import org.apache.commons.io.input.BOMInputStream;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.core.type.StandardAnnotationMetadata;
-
-import com.opencsv.CSVReader;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import Projeto3.Worker.Models.Room;
 
 public class RoomLoader {
 
-	public static final LinkedList<Room> readRoomFile(final File file) {
+	private HashMap<String, Boolean> characteristics;
+	private JSONArray rooms_json;
+	private LinkedList<Room> rooms = new LinkedList<>();
+	private JSONObject roomsJson;
+	private String edificio;
+	private String name;
+	private int capacidade_normal;
+	private int n_caracteristicas;
+	private int capacidade_exame;
 
-		final LinkedList<Room> rooms = new LinkedList<>();
-		try {
-			// Creates the reader
-			final InputStreamReader reader = new InputStreamReader(new BOMInputStream(new FileInputStream(file)),
-					StandardCharsets.UTF_8);
-			final CSVReader csvReader = new CSVReader(reader);
+	public RoomLoader(JSONArray rooms_json) throws JSONException {
+		this.rooms_json = rooms_json;
+		setupRooms();
+	}
 
-			// Saves the headers names for the correct allocation of values to variables
-			String[] headers = csvReader.readNext();
-			for (String header : headers) {
-				System.out.println("Header: " + header);
+	public void setupRooms() {
+
+		for (int i = 0; i < rooms_json.length(); i++) {
+
+			try {
+				roomsJson = rooms_json.getJSONObject(i);
+
+				Iterator<String> keys = roomsJson.keys();
+				characteristics = new HashMap<String, Boolean>();
+
+				while (keys.hasNext()) {
+
+					String key = keys.next();
+
+					if (key.contains("Edifício")) {
+						edificio = roomsJson.getString(key);
+					} else if (key.equals("Nome sala")) {
+						name = roomsJson.getString(key);
+					} else if (key.equals("Capacidade Normal")) {
+						capacidade_normal = Integer.parseInt(roomsJson.getString(key));
+					} else if (key.equals("Nº características")) {
+						n_caracteristicas = Integer.parseInt(roomsJson.getString(key));
+					} else if (key.equals("Capacidade Exame")) {
+						capacidade_exame = Integer.parseInt(roomsJson.getString(key));
+					} else if (key.equals(Room.HEADERS[5])) {
+						validateCharacteristic(key);
+					} else if (key.equals(Room.HEADERS[6])) {
+						validateCharacteristic(key);
+					} else if (key.equals(Room.HEADERS[7])) {
+						validateCharacteristic(key);
+					} else if (key.equals(Room.HEADERS[8])) {
+						validateCharacteristic(key);
+					} else if (key.equals(Room.HEADERS[9])) {
+						validateCharacteristic(key);
+					} else if (key.equals(Room.HEADERS[10])) {
+						validateCharacteristic(key);
+					} else if (key.equals(Room.HEADERS[11])) {
+						validateCharacteristic(key);
+					} else if (key.equals(Room.HEADERS[12])) {
+						validateCharacteristic(key);
+					} else if (key.equals(Room.HEADERS[13])) {
+						validateCharacteristic(key);
+					} else if (key.equals(Room.HEADERS[14])) {
+						validateCharacteristic(key);
+					} else if (key.equals(Room.HEADERS[15])) {
+						validateCharacteristic(key);
+					} else if (key.equals(Room.HEADERS[16])) {
+						validateCharacteristic(key);
+					} else if (key.equals(Room.HEADERS[17])) {
+						validateCharacteristic(key);
+					} else if (key.equals(Room.HEADERS[18])) {
+						validateCharacteristic(key);
+					} else if (key.equals(Room.HEADERS[19])) {
+						validateCharacteristic(key);
+					} else if (key.equals(Room.HEADERS[20])) {
+						validateCharacteristic(key);
+					} else if (key.equals(Room.HEADERS[21])) {
+						validateCharacteristic(key);
+					} else if (key.equals(Room.HEADERS[22])) {
+						validateCharacteristic(key);
+					} else if (key.equals(Room.HEADERS[23])) {
+						validateCharacteristic(key);
+					} else if (key.equals(Room.HEADERS[24])) {
+						validateCharacteristic(key);
+					} else if (key.equals(Room.HEADERS[26])) {
+						validateCharacteristic(key);
+					} else if (key.equals(Room.HEADERS[27])) {
+						validateCharacteristic(key);
+					} else if (key.equals(Room.HEADERS[28])) {
+						validateCharacteristic(key);
+					} else if (key.equals(Room.HEADERS[29])) {
+						validateCharacteristic(key);
+					} else if (key.equals(Room.HEADERS[30])) {
+						validateCharacteristic(key);
+					} else if (key.equals(Room.HEADERS[31])) {
+						validateCharacteristic(key);
+					} else if (key.equals(Room.HEADERS[32])) {
+						validateCharacteristic(key);
+					} else if (key.equals(Room.HEADERS[33])) {
+						validateCharacteristic(key);
+					} else if (key.equals(Room.HEADERS[34])) {
+						validateCharacteristic(key);
+					}
+
+				}
+
+				// Organizar hashmap ...
+
+				Room r = new Room(edificio, name, capacidade_normal, capacidade_exame, n_caracteristicas,
+						new LinkedList<Boolean>(characteristics.values()));
+				rooms.add(r);
+			} catch (JSONException e) {
+				e.printStackTrace();
 			}
-			int[] order_headers = getOrder(headers);
-
-			// Will contain a row of the csv
-			String[] tokens;
-
-			while ((tokens = csvReader.readNext()) != null) {
-				rooms.add(creationRooms(tokens, order_headers));
-			}
-			csvReader.close();
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
+
+	}
+
+	public LinkedList<Room> getRooms() {
 		return rooms;
 	}
 
-	private static Room creationRooms(String[] tokens, int[] order_headers) {
-
-		// Checks which characteristics the room has
-		LinkedList<Boolean> characteristics = new LinkedList<>();
-		for (int index = 0; index < order_headers.length; index++) {
-			if (tokens[order_headers[index]].equals("X") || tokens[order_headers[index]].equals("x")) {
-				characteristics.add(true);
-			} else {
-				characteristics.add(false);
-			}
-		}
-		System.out.println("tokens[order_headers[0]]:" + tokens[order_headers[0]] + " " + "tokens[order_headers[1]]:"
-				+ tokens[order_headers[1]] + " " + "tokens[order_headers[2]]:" + tokens[order_headers[2]] + " "
-				+ "tokens[order_headers[3]]:" + tokens[order_headers[3]] + " " + "tokens[order_headers[4]]:"
-				+ tokens[order_headers[4]]);
-		Room r = new Room(tokens[order_headers[0]], tokens[order_headers[1]],
-				Integer.parseInt(tokens[order_headers[2]]), Integer.parseInt(tokens[order_headers[3]]),
-				Integer.parseInt(tokens[order_headers[4]]), characteristics);
-		return r;
+	public void setRooms(LinkedList<Room> rooms) {
+		this.rooms = rooms;
 	}
 
-	// Due to json files coming with the columns of the csv in different order
-	private static int[] getOrder(String[] headers) {
-		String[] order = Room.HEADERS;
-		int[] indexes = new int[order.length];
-		int count1 = 0;
-		for (String label : headers) {
-//			System.out.println("Label: " + label);
-			int count2 = 0;
-			for (String label2 : order) {
-//				System.out.println("Label 2: " + label2);
-//				System.out.println(label.contains("Edifício"));
-				if (label2.equals(label) || label.contains(label2)) {
-
-					if (label.contains("Edifício")) {
-						label = "Edifício";
-					}
-
-					System.out.println("Labels iguais: " + label + " " + label2);
-					indexes[count2] = count1;
-					break;
-				}
-				count2++;
+	public void validateCharacteristic(String key) {
+		try {
+			if (this.roomsJson.getString(key).equals('x') || this.roomsJson.getString(key).equals('X')) {
+				characteristics.put(key, true);
+			} else {
+				characteristics.put(key, false);
 			}
-			count1++;
-
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}
-//		System.out.println(order.length + "\nIndexes:\n");
-//		for (int i : indexes) {
-//			System.out.println(i);
-//
-//		}
-		return indexes;
 	}
 
 }
