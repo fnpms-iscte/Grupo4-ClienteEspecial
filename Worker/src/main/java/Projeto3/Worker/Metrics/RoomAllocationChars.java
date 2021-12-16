@@ -17,7 +17,7 @@ public class RoomAllocationChars extends Metric{
         for(Lecture lect : LectList){
             String caracter = lect.getRequired_room_characteristics();
             if(!caracter.isEmpty()){
-                if(lect.getRoom().getCharacteristicsString().contains(caracter))
+                if(lect.getRoom_characteristics().contains(caracter))
                     score++; 
             }
             count++;

@@ -15,8 +15,8 @@ public class ClassCapacityUnder extends Metric {
         double score = 0;
         double count = 0;
         for(Lecture lect : LectList){
-            if(lect.getRoom() != null){
-                if(lect.getN_students() >= (lect.getRoom().getNormal_capacity() / 2)){
+            if(!lect.getRoom_name().isEmpty()){
+                if(lect.getN_students() >= (lect.getRoom_lotation() / 2)){
                     score++;
                 }
             }

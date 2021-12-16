@@ -21,7 +21,6 @@ public class Room {
 		"Sala NEE","Sala Provas","Sala Reunião","Sala de Arquitectura","Sala de Aulas normal","videoconferencia","Átrio"
 	};
 
-	public  final int NUMBER_OF_CHARACTERISTICS = 30;
 	private final String building;
 	private final String name;
 	private final int normal_capacity;
