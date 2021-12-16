@@ -55,7 +55,7 @@ class Worker {
 			// Time interval for failed reconnection
 			options.reconnectionDelay = 1000;
 			// Connection timeout (ms)
-			options.timeout = 500;
+			options.timeout = 500000000;
 			socket = IO.socket(url, options);
 			System.out.println("Connected");
 
@@ -211,8 +211,7 @@ class Worker {
 		Evaluation ideal_ev = new Evaluation(Ideal_lectures, MetricList);
 		Response out3 = new Response("Horario3", "Horario3", Ideal_lectures, ideal_ev.resultList, ideal_ev.bestResult);
 		output.add(out3);
-		
-		
+
 		System.out.println("Ideal alg ...");
 
 		for (Room r : rooms) {
@@ -220,11 +219,11 @@ class Worker {
 		}
 
 		ResponseToJSON transfer = new ResponseToJSON();
-		
-		//ERRO ---------- JSON---------------------------------------------------------------------------------------------
+
+		// ERRO ----------
+		// JSON---------------------------------------------------------------------------------------------
 		String jsonString = transfer.ResToJSON(output);
-		
-		
+
 		JsonObject jsonResponse = (JsonObject) JsonParser.parseString(jsonString);
 
 		send_timetables(jsonResponse);
@@ -242,15 +241,5 @@ class Worker {
 		socket.emit("results", body);
 		System.out.println("Resultados enviados ...");
 	}
-	
-	public String generateJSon(ArrayList<Response> output) {
-		String json = "{[";
-		
-		for (Response response : output) {
-			
-		}
-		
-		return json;
-		
-	}
+
 }
