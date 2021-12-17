@@ -14,6 +14,7 @@ import Projeto3.Worker.Metrics.RoomAllocationChars;
 import Projeto3.Worker.Models.Lecture;
 import Projeto3.Worker.Models.Response;
 import Projeto3.Worker.Models.Room;
+import Projeto3.Worker.Models.ScheduleResponse;
 
 import java.io.File;
 import java.io.IOException;
@@ -90,7 +91,7 @@ class Worker {
 
 						// System.out.println(body.toString());
 						upload_jsons(body);
-						// System.out.println(body);
+						//System.out.println(body.getString("id"));
 						/*
 						 * Jsonteste a = new Jsonteste(body.getString("id"));
 						 * System.out.println(a.jsonObject + "\n\nfiles to handle\n");
@@ -200,11 +201,18 @@ class Worker {
 
 		// ERRO ----------
 		// JSON---------------------------------------------------------------------------------------------
-		String jsonString = transfer.ResToJSON(output);
+		ScheduleResponse trueOutput = new ScheduleResponse(body.getString("id"),output);
+		String jsonString = transfer.ResToJSON(trueOutput);
 
-		JsonObject jsonResponse = (JsonObject) JsonParser.parseString(jsonString);
+		jsonString = jsonString.substring(1, jsonString.length() - 1);
 
-		send_timetables(jsonResponse);
+		// System.out.println("Depois jsonString: " + jsonString);
+
+		JsonObject jsonResponse = stringToJSON(jsonString);
+
+		// System.out.println("Depois jsonResponse: " + jsonResponse);
+
+		send_timetables(jsonResponse.toString());
 		// output: horario JSON
 
 		// Delete files
@@ -214,7 +222,7 @@ class Worker {
 
 	}
 
-	public void send_timetables(JsonObject body) {
+	public void send_timetables(String body) {
 		System.out.println("Entra no send timetables");
 		try {
 			socket.emit("results", body);
@@ -225,4 +233,8 @@ class Worker {
 		System.out.println("Resultados enviados ...");
 	}
 
+	public JsonObject stringToJSON(String jsonString){
+		JsonObject jsonResponse = (JsonObject) JsonParser.parseString(jsonString);
+		return jsonResponse;
+	}
 }
