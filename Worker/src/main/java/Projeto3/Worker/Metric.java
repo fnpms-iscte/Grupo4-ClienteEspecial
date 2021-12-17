@@ -6,18 +6,16 @@ import java.util.List;
 import Projeto3.Worker.Models.Lecture;
 
 public class Metric {
-    final String name;
-    final List<Double> results = new ArrayList<Double>();
+	final String name;
+	final List<Double> results = new ArrayList<Double>();
 
-    public Metric(String name){
-        this.name = name;
+	public Metric(String name) {
+		this.name = name;
 
+	}
 
-    }
-
-    public Double evaluate(List<Lecture> lectList) {
-        return 0.0;
-    }
-
+	public Double evaluate(List<Lecture> lectList) {
+		return 0.0;
+	}
 
 }
