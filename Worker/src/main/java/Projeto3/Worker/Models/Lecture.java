@@ -6,20 +6,20 @@ import org.joda.time.DateTime;
 
 public class Lecture {
 
-	private  LinkedList<String> course;
-	private  String name;
-	private  String shift;
-	private  String class_name;
-	private  int n_students;
-	private  boolean Free_Spots;
-    private  boolean Capacity_Overflow;
-	private  String week_day;
-	private  DateTime start_date;
-	private  DateTime end_date;
-	private  String required_room_characteristics;
-	private String room_name;
-	private int room_lotation;
-	private ArrayList<String> room_characteristics;
+	private  LinkedList<String> Curso;
+	private  String Unidade_de_execucaoo;
+	private  String Turno;
+	private  String Turma;
+	private  int Inscritos_no_turno;
+	private  boolean Turnos_com_capacidade_superior_a_capacidade_das_caracteristicas_das_salas;
+    private  boolean Turno_com_inscricoes_superiores_a_capacidade_das_salas;
+	private  String Dia_da_Semana;
+	private  DateTime Inicio;
+	private  DateTime Fim;
+	private  String Caracteristicas_da_sala_pedida_para_a_aula;
+	private String Sala_da_aula;
+	private int Lotacao;
+	private ArrayList<String> Caracteristicas_reais_da_sala;
 
 
 	//Headers of the csv file because of json scrambling
@@ -30,168 +30,168 @@ public class Lecture {
 
 	public Lecture(LinkedList<String> course, String name, String shift, String class_name, int n_students, boolean Free_Spots, boolean Capacity_Overflow,
 	String week_day, DateTime start_date, DateTime end_date, String required_room_characteristics) {
-		this.course = course;
-		this.name = name;
-		this.shift = shift;
-		this.class_name = class_name;
-		this.n_students = n_students;
-		this.Free_Spots = Free_Spots;
-		this.Capacity_Overflow = Capacity_Overflow;
-		this.week_day = week_day;
-		this.start_date = start_date;
-		this.end_date = end_date;
-		this.required_room_characteristics = required_room_characteristics;
+		this.Curso = course;
+		this.Unidade_de_execucaoo = name;
+		this.Turno = shift;
+		this.Turma = class_name;
+		this.Inscritos_no_turno = n_students;
+		this.Turnos_com_capacidade_superior_a_capacidade_das_caracteristicas_das_salas = Free_Spots;
+		this.Turno_com_inscricoes_superiores_a_capacidade_das_salas = Capacity_Overflow;
+		this.Dia_da_Semana = week_day;
+		this.Inicio = start_date;
+		this.Fim = end_date;
+		this.Caracteristicas_da_sala_pedida_para_a_aula = required_room_characteristics;
 	}
 
 	public LinkedList<String> getCourse() {
-		return course;
+		return Curso;
 	}
 
 	public void setCourse(LinkedList<String> course) {
-		this.course = course;
+		this.Curso = course;
 	}
 
 
 
 	public String getName() {
-		return name;
+		return Unidade_de_execucaoo;
 	}
 
 
 
 	public void setName(String name) {
-		this.name = name;
+		this.Unidade_de_execucaoo = name;
 	}
 
 
 
 	public String getShift() {
-		return shift;
+		return Turno;
 	}
 
 
 
 	public void setShift(String shift) {
-		this.shift = shift;
+		this.Turno = shift;
 	}
 
 
 
 	public String getClass_name() {
-		return class_name;
+		return Turma;
 	}
 
 
 
 	public void setClass_name(String class_name) {
-		this.class_name = class_name;
+		this.Turma = class_name;
 	}
 
 
 
 	public int getN_students() {
-		return n_students;
+		return Inscritos_no_turno;
 	}
 
 
 
 	public void setN_students(int n_students) {
-		this.n_students = n_students;
+		this.Inscritos_no_turno = n_students;
 	}
 
 
 
 	public boolean isFree_Spots() {
-		return Free_Spots;
+		return Turnos_com_capacidade_superior_a_capacidade_das_caracteristicas_das_salas;
 	}
 
 
 
 	public void setFree_Spots(boolean free_Spots) {
-		Free_Spots = free_Spots;
+		Turnos_com_capacidade_superior_a_capacidade_das_caracteristicas_das_salas = free_Spots;
 	}
 
 
 
 	public boolean isCapacity_Overflow() {
-		return Capacity_Overflow;
+		return Turno_com_inscricoes_superiores_a_capacidade_das_salas;
 	}
 
 
 
 	public void setCapacity_Overflow(boolean capacity_Overflow) {
-		Capacity_Overflow = capacity_Overflow;
+		Turno_com_inscricoes_superiores_a_capacidade_das_salas = capacity_Overflow;
 	}
 
 
 
 	public String getWeek_day() {
-		return week_day;
+		return Dia_da_Semana;
 	}
 
 
 
 	public void setWeek_day(String week_day) {
-		this.week_day = week_day;
+		this.Dia_da_Semana = week_day;
 	}
 
 
 
 	public DateTime getStart_date() {
-		return start_date;
+		return Inicio;
 	}
 
 
 
 	public void setStart_date(DateTime start_date) {
-		this.start_date = start_date;
+		this.Inicio = start_date;
 	}
 
 
 
 	public DateTime getEnd_date() {
-		return end_date;
+		return Fim;
 	}
 
 
 
 	public void setEnd_date(DateTime end_date) {
-		this.end_date = end_date;
+		this.Fim = end_date;
 	}
 
 
 
 	public String getRequired_room_characteristics() {
-		return required_room_characteristics;
+		return Caracteristicas_da_sala_pedida_para_a_aula;
 	}
 
 
 
 	public void setRequired_room_characteristics(String required_room_characteristics) {
-		this.required_room_characteristics = required_room_characteristics;
+		this.Caracteristicas_da_sala_pedida_para_a_aula = required_room_characteristics;
 	}
 	
 	public String getRoom_name() {
-		return room_name;
+		return Sala_da_aula;
 	}
 
 	public void setRoom_name(String room_name) {
-		this.room_name = room_name;
+		this.Sala_da_aula = room_name;
 	}
 
 	public int getRoom_lotation() {
-		return room_lotation;
+		return Lotacao;
 	}
 
 	public void setRoom_lotation(int room_lotation) {
-		this.room_lotation = room_lotation;
+		this.Lotacao = room_lotation;
 	}
 
 	public ArrayList<String> getRoom_characteristics() {
-		return room_characteristics;
+		return Caracteristicas_reais_da_sala;
 	}
 
 	public void setRoom_characteristics(ArrayList<String> room_characteristics) {
-		this.room_characteristics = room_characteristics;
+		this.Caracteristicas_reais_da_sala = room_characteristics;
 	}
 }
