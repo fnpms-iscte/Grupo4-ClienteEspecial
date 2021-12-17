@@ -212,7 +212,7 @@ class Worker {
 
 		// System.out.println("Depois jsonResponse: " + jsonResponse);
 
-		send_timetables(jsonResponse.toString());
+		send_timetables(jsonResponse);
 		// output: horario JSON
 
 		// Delete files
@@ -222,7 +222,7 @@ class Worker {
 
 	}
 
-	public void send_timetables(String body) {
+	public void send_timetables(JsonObject body) {
 		System.out.println("Entra no send timetables");
 		try {
 			socket.emit("results", body);
