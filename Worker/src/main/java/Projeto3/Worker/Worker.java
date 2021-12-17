@@ -7,8 +7,6 @@ import Projeto3.Worker.Algorithms.IdealAlg;
 import Projeto3.Worker.Algorithms.MiddleAlg;
 import Projeto3.Worker.Algorithms.SimpleAlg;
 import Projeto3.Worker.Loaders.LectureLoader;
-import Projeto3.Worker.Loaders.LectureLoader11;
-import Projeto3.Worker.Loaders.RoomLoaderOldddd;
 import Projeto3.Worker.Loaders.RoomLoader;
 import Projeto3.Worker.Metrics.ClassCapacityOver;
 import Projeto3.Worker.Metrics.ClassCapacityUnder;
@@ -121,34 +119,14 @@ class Worker {
 	public void upload_jsons(JSONObject body) throws Exception {
 		ArrayList<File> filesList = new ArrayList<File>();
 		JSONArray files = body.getJSONArray("files");
-		System.out.println(files.length());
-		for (int i = 0; i < files.length(); i++) {
-			JSONArray pessoas = files.getJSONArray(i);
-			if (i == 0) {
-				JSONObject pessoa = pessoas.getJSONObject(0);
-				// System.out.println(pessoa.toString());
-			}
-			File file;
-			if (i == 0) {
-				file = new File("uploads/" + body.getString("id") + "_rooms.csv");
-				filesList.add(file);
-			} else {
-				file = new File("uploads/" + body.getString("id") + "_lectures.csv");
-				filesList.add(file);
-			}
-			file.createNewFile();
-			String csv = CDL.toString(pessoas);
-			FileUtils.writeStringToFile(file, csv, StandardCharsets.UTF_8);
-
-		}
 
 		// Input: csv
-		System.out.println("antes");
 		List<Room> rooms = new RoomLoader(files.getJSONArray(0)).getRooms();
-		System.out.println("entre Room e Lectures criadas ...");
+		System.out.println("Enter setup2");
 		List<Lecture> lectures = new LectureLoader(files.getJSONArray(1)).getLectures();
-
-		System.out.println("Room e Lectures criadas ...");
+		System.out.println("Both files uploaded");
+		
+		
 		// Metrics Initialization
 		ClassCapacityOver metric1 = new ClassCapacityOver();
 		ClassCapacityUnder metric2 = new ClassCapacityUnder();
@@ -237,8 +215,13 @@ class Worker {
 	}
 
 	public void send_timetables(JsonObject body) {
-		System.out.println(body + "\n\nsend_timetables\n");
-		socket.emit("results", body);
+		System.out.println("Entra no send timetables");
+		try {
+			socket.emit("results", body);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		System.out.println("Resultados enviados ...");
 	}
 

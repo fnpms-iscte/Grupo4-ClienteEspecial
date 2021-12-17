@@ -28,9 +28,4 @@ public class ResponseToJSON {
 		return null;
 
 	}
-	
-	public static void main(String[] args) {
-		ObjectMapper Obj = new ObjectMapper();
-	}
-
 }

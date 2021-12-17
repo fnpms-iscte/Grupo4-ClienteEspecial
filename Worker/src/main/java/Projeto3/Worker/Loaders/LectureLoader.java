@@ -1,5 +1,6 @@
 package Projeto3.Worker.Loaders;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -10,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import Projeto3.Worker.Models.Lecture;
+import Projeto3.Worker.Models.Room;
 
 public class LectureLoader {
 
@@ -34,7 +36,6 @@ public class LectureLoader {
 	}
 
 	public void setupLecture() throws JSONException {
-
 		for (int i = 0; i < lectures_json.length(); i++) {
 			JSONObject lectureJson = lectures_json.getJSONObject(i);
 

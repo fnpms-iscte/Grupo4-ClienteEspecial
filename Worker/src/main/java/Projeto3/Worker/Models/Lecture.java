@@ -1,5 +1,6 @@
 package Projeto3.Worker.Models;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import org.joda.time.DateTime;
 
@@ -18,7 +19,7 @@ public class Lecture {
 	private  String required_room_characteristics;
 	private String room_name;
 	private int room_lotation;
-	private LinkedList<String> room_characteristics;
+	private ArrayList<String> room_characteristics;
 
 
 	//Headers of the csv file because of json scrambling
@@ -186,11 +187,11 @@ public class Lecture {
 		this.room_lotation = room_lotation;
 	}
 
-	public LinkedList<String> getRoom_characteristics() {
+	public ArrayList<String> getRoom_characteristics() {
 		return room_characteristics;
 	}
 
-	public void setRoom_characteristics(LinkedList<String> room_characteristics) {
+	public void setRoom_characteristics(ArrayList<String> room_characteristics) {
 		this.room_characteristics = room_characteristics;
 	}
 }

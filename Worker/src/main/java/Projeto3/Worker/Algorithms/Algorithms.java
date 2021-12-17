@@ -62,7 +62,7 @@ public abstract class Algorithms {
     public void allocate(Lecture l , Room r , Interval new_booking){
         l.setRoom_name(r.getName());
         l.setRoom_lotation(r.getNormal_capacity());
-        l.setRoom_characteristics(r.getCharacteristicsString());
+        l.setRoom_characteristics(r.getCharacteristics());
         r.addLecture(new_booking);
     }
 }
