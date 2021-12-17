@@ -172,6 +172,7 @@ class Worker {
 
 		JsonObject jsonResponse = stringToJSON(jsonString);
 
+
 		send_timetables(jsonResponse);
 
 		// Delete files
@@ -182,7 +183,6 @@ class Worker {
 	}
 
 	public void send_timetables(JsonObject body) {
-		System.out.println("Entra no send timetables");
 		try {
 			socket.emit("results", body);
 		} catch (Exception e) {
