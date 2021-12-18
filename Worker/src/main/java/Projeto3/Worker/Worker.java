@@ -31,7 +31,7 @@ class Worker {
 	private Socket socket;
 
 	public void connection() {
-		String url = "http://localhost:3000/";
+		String url = "https://projeto-ads-3-grupo4.herokuapp.com/";
 		try {
 			IO.Options options = new IO.Options();
 			options.transports = new String[] { "websocket" };
