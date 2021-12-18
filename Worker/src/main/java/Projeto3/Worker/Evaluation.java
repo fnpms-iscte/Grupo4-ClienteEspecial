@@ -5,19 +5,19 @@ import java.util.*;
 import Projeto3.Worker.Models.Lecture;
 
 public class Evaluation {
-	Hashtable<String, Double> resultList = new Hashtable<String, Double>();
+	List<Metric> resultList = new ArrayList<Metric>();
 	String bestResult = "";
 
 	public Evaluation(List<Lecture> LectList, List<Metric> MetricList) {
 		String highestMetric = "";
 		Double highestScore = 0.0;
 		for (Metric metric : MetricList) {
-			double score = metric.evaluate(LectList);
-			if (score > highestScore) {
-				highestScore = score;
+			metric.results = metric.evaluate(LectList);
+			if (metric.results > highestScore) {
+				highestScore = metric.results;
 				highestMetric = metric.name;
 			}
-			this.resultList.put(metric.name, score);
+			this.resultList.add(metric);
 		}
 
 		this.bestResult = highestMetric;

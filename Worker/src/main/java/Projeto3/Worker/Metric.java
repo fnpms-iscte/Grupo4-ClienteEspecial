@@ -1,13 +1,12 @@
 package Projeto3.Worker;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import Projeto3.Worker.Models.Lecture;
 
 public class Metric {
 	final String name;
-	final List<Double> results = new ArrayList<Double>();
+	Double results = 0.0;
 
 	public Metric(String name) {
 		this.name = name;

@@ -1,9 +1,9 @@
 package Projeto3.Worker.Models;
-
-import java.util.Hashtable;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import Projeto3.Worker.Metric;
 
 public class Response {
     @JsonProperty("name")
@@ -13,11 +13,11 @@ public class Response {
     @JsonProperty("lectures")
     private List<Lecture> lectures;
     @JsonProperty("metrics")
-    private Hashtable<String, Double>  metrics;
+    private List<Metric>  metrics;
     @JsonProperty("best_metric")
-    private String        best_metric;
+    private String  best_metric;
     
-    public Response(String name, String id, List<Lecture> lectures, Hashtable<String, Double> resultList, String best_metric) {
+    public Response(String name, String id, List<Lecture> lectures, List<Metric> resultList, String best_metric) {
         this.name = name;
         this.id= id;
         this.lectures = lectures;
@@ -37,7 +37,7 @@ public class Response {
         return lectures;
     }
 
-    public Hashtable<String, Double> getMetrics() {
+    public List<Metric> getMetrics() {
         return metrics;
     }
 
@@ -57,7 +57,7 @@ public class Response {
         this.lectures = lectures;
     }
 
-    public void setMetrics(Hashtable<String, Double> metrics) {
+    public void setMetrics(List<Metric> metrics) {
         this.metrics = metrics;
     }
 
