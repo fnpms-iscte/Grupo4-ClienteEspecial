@@ -12,12 +12,13 @@ public class Evaluation {
 		String highestMetric = "";
 		Double highestScore = 0.0;
 		for (Metric metric : MetricList) {
-			metric.results = metric.evaluate(LectList);
-			if (metric.results > highestScore) {
-				highestScore = metric.results;
-				highestMetric = metric.name;
+			Metric clone = new Metric(metric.name);
+			clone.results = metric.evaluate(LectList);
+			if (clone.results > highestScore) {
+				highestScore = clone.results;
+				highestMetric = clone.name;
 			}
-			this.resultList.add(metric);
+			this.resultList.add(clone);
 		}
 
 		this.bestResult = highestMetric;
