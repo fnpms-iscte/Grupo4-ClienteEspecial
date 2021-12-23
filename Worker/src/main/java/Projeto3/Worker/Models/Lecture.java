@@ -2,6 +2,10 @@ package Projeto3.Worker.Models;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.joda.time.DateTime;
 
 public class Lecture {
@@ -41,157 +45,200 @@ public class Lecture {
 		this.Inicio = start_date;
 		this.Fim = end_date;
 		this.Caracteristicas_da_sala_pedida_para_a_aula = required_room_characteristics;
+
 	}
 
-	public LinkedList<String> getCourse() {
+	
+
+	public LinkedList<String> getCurso() {
 		return Curso;
 	}
 
-	public void setCourse(LinkedList<String> course) {
-		this.Curso = course;
+
+
+	public void setCurso(LinkedList<String> curso) {
+		Curso = curso;
 	}
 
 
 
-	public String getName() {
+	public String getUnidade_de_execucaoo() {
 		return Unidade_de_execucaoo;
 	}
 
 
 
-	public void setName(String name) {
-		this.Unidade_de_execucaoo = name;
+	public void setUnidade_de_execucaoo(String unidade_de_execucaoo) {
+		Unidade_de_execucaoo = unidade_de_execucaoo;
 	}
 
 
 
-	public String getShift() {
+	public String getTurno() {
 		return Turno;
 	}
 
 
 
-	public void setShift(String shift) {
-		this.Turno = shift;
+	public void setTurno(String turno) {
+		Turno = turno;
 	}
 
 
 
-	public String getClass_name() {
+	public String getTurma() {
 		return Turma;
 	}
 
 
 
-	public void setClass_name(String class_name) {
-		this.Turma = class_name;
+	public void setTurma(String turma) {
+		Turma = turma;
 	}
 
 
 
-	public int getN_students() {
+	public int getInscritos_no_turno() {
 		return Inscritos_no_turno;
 	}
 
 
 
-	public void setN_students(int n_students) {
-		this.Inscritos_no_turno = n_students;
+	public void setInscritos_no_turno(int inscritos_no_turno) {
+		Inscritos_no_turno = inscritos_no_turno;
 	}
 
 
-
-	public boolean isFree_Spots() {
+	@JsonIgnore
+	public boolean isTurnos_com_capacidade_superior_a_capacidade_das_caracteristicas_das_salas() {
 		return Turnos_com_capacidade_superior_a_capacidade_das_caracteristicas_das_salas;
 	}
 
 
-
-	public void setFree_Spots(boolean free_Spots) {
-		Turnos_com_capacidade_superior_a_capacidade_das_caracteristicas_das_salas = free_Spots;
+	@JsonIgnore
+	public void setTurnos_com_capacidade_superior_a_capacidade_das_caracteristicas_das_salas(
+			boolean turnos_com_capacidade_superior_a_capacidade_das_caracteristicas_das_salas) {
+		Turnos_com_capacidade_superior_a_capacidade_das_caracteristicas_das_salas = turnos_com_capacidade_superior_a_capacidade_das_caracteristicas_das_salas;
 	}
 
 
-
-	public boolean isCapacity_Overflow() {
+	@JsonIgnore
+	public boolean isTurno_com_inscricoes_superiores_a_capacidade_das_salas() {
 		return Turno_com_inscricoes_superiores_a_capacidade_das_salas;
 	}
 
 
-
-	public void setCapacity_Overflow(boolean capacity_Overflow) {
-		Turno_com_inscricoes_superiores_a_capacidade_das_salas = capacity_Overflow;
+	@JsonIgnore
+	public void setTurno_com_inscricoes_superiores_a_capacidade_das_salas(
+			boolean turno_com_inscricoes_superiores_a_capacidade_das_salas) {
+		Turno_com_inscricoes_superiores_a_capacidade_das_salas = turno_com_inscricoes_superiores_a_capacidade_das_salas;
 	}
 
 
 
-	public String getWeek_day() {
+	public String getDia_da_Semana() {
 		return Dia_da_Semana;
 	}
 
 
 
-	public void setWeek_day(String week_day) {
-		this.Dia_da_Semana = week_day;
+	public void setDia_da_Semana(String dia_da_Semana) {
+		Dia_da_Semana = dia_da_Semana;
 	}
 
 
 
-	public DateTime getStart_date() {
+	public DateTime getInicio() {
 		return Inicio;
 	}
 
 
 
-	public void setStart_date(DateTime start_date) {
-		this.Inicio = start_date;
+	public void setInicio(DateTime inicio) {
+		Inicio = inicio;
 	}
 
 
 
-	public DateTime getEnd_date() {
+	public DateTime getFim() {
 		return Fim;
 	}
 
 
 
-	public void setEnd_date(DateTime end_date) {
-		this.Fim = end_date;
+	public void setFim(DateTime fim) {
+		Fim = fim;
 	}
 
 
 
-	public String getRequired_room_characteristics() {
+	public String getCaracteristicas_da_sala_pedida_para_a_aula() {
 		return Caracteristicas_da_sala_pedida_para_a_aula;
 	}
 
 
 
-	public void setRequired_room_characteristics(String required_room_characteristics) {
-		this.Caracteristicas_da_sala_pedida_para_a_aula = required_room_characteristics;
+	public void setCaracteristicas_da_sala_pedida_para_a_aula(String caracteristicas_da_sala_pedida_para_a_aula) {
+		Caracteristicas_da_sala_pedida_para_a_aula = caracteristicas_da_sala_pedida_para_a_aula;
 	}
-	
-	public String getRoom_name() {
+
+
+
+	public String getSala_da_aula() {
 		return Sala_da_aula;
 	}
 
-	public void setRoom_name(String room_name) {
-		this.Sala_da_aula = room_name;
+
+
+	public void setSala_da_aula(String sala_da_aula) {
+		Sala_da_aula = sala_da_aula;
 	}
 
-	public int getRoom_lotation() {
+
+
+	public int getLotacao() {
 		return Lotacao;
 	}
 
-	public void setRoom_lotation(int room_lotation) {
-		this.Lotacao = room_lotation;
+
+
+	public void setLotacao(int lotacao) {
+		Lotacao = lotacao;
 	}
 
-	public ArrayList<String> getRoom_characteristics() {
+
+
+	public ArrayList<String> getCaracteristicas_reais_da_sala() {
 		return Caracteristicas_reais_da_sala;
 	}
 
-	public void setRoom_characteristics(ArrayList<String> room_characteristics) {
-		this.Caracteristicas_reais_da_sala = room_characteristics;
+
+
+	public void setCaracteristicas_reais_da_sala(ArrayList<String> caracteristicas_reais_da_sala) {
+		Caracteristicas_reais_da_sala = caracteristicas_reais_da_sala;
 	}
+
+
+
+	@Override
+	public String toString() 
+	{
+		return new ToStringBuilder(this)
+		  .append("name", Curso)
+		  .append("Unidade_de_execução", Unidade_de_execucaoo)
+		  .append("Turno", Turno)
+		  .append("Turma", Turma)
+		  .append("Inscritos_no_turno", Inscritos_no_turno)
+		  .append("Turnos_com_capacidade_superior_a_capacidade_das_caracteristicas_das_salas", Turnos_com_capacidade_superior_a_capacidade_das_caracteristicas_das_salas)
+		  .append("Turno_com_inscricoes_superiores_a_capacidade_das_salas", Turno_com_inscricoes_superiores_a_capacidade_das_salas)
+		  .append("Dia_da_Semana", Dia_da_Semana)
+		  .append("Inicio", Inicio)
+		  .append("Fim", Fim)
+		  .append("Caracteristicas_da_sala_pedida_para_a_aula", Caracteristicas_da_sala_pedida_para_a_aula)
+		  .append("Sala_da_aula", Sala_da_aula)
+		  .append("Lotacao", Lotacao)
+		  .append("Caracteristicas_reais_da_sala", Caracteristicas_reais_da_sala)
+		  .toString(); 
+	}
+
 }

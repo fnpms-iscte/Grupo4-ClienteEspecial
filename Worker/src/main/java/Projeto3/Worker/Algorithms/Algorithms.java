@@ -14,23 +14,24 @@ public abstract class Algorithms {
         for (Room r : room) {
 
             List<Interval> booking_list =  r.getLectures_times_booked();
+            if(l.getInicio() != null && l.getFim() != null){
+                //Time interval of the lecture (includes date)
+                Interval new_booking = new Interval(l.getInicio(), l.getFim());
 
-            //Time interval of the lecture (includes date)
-            Interval new_booking = new Interval(l.getStart_date(), l.getEnd_date());
-
-            if(booking_list.isEmpty()){
-                allocate(l, r, new_booking);
-                break;
-            }
-
-            int count = 0;
-            boolean checker = true;
-            while(checker){
-                if(!r.getLectures_times_booked().get(count).overlaps(new_booking)) {
+                if(booking_list.isEmpty()){
                     allocate(l, r, new_booking);
-                    checker = false;
+                    break;
                 }
-                count++;
+
+                int count = 0;
+                boolean checker = true;
+                while(checker){
+                    if(!r.getLectures_times_booked().get(count).overlaps(new_booking)) {
+                        allocate(l, r, new_booking);
+                        checker = false;
+                    }
+                    count++;
+                }
             }
         }
         // if no room is available the lecture continues without a room
@@ -60,9 +61,9 @@ public abstract class Algorithms {
     
     //Allocates a room to the lecture and a booking to the same room
     public void allocate(Lecture l , Room r , Interval new_booking){
-        l.setRoom_name(r.getName());
-        l.setRoom_lotation(r.getNormal_capacity());
-        l.setRoom_characteristics(r.getCharacteristics());
+        l.setSala_da_aula(r.getName());
+        l.setLotacao(r.getNormal_capacity());
+        l.setCaracteristicas_reais_da_sala(r.getCharacteristics());
         r.addLecture(new_booking);
     }
 }

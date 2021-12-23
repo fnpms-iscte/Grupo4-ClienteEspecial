@@ -166,13 +166,13 @@ class Worker {
 		ResponseToJSON transfer = new ResponseToJSON();
 
 		ScheduleResponse trueOutput = new ScheduleResponse(body.getString("id"), output);
-		String jsonString = transfer.ResToJSON(trueOutput);
 
+		String jsonString = transfer.ResToJSON(trueOutput);
 		jsonString = jsonString.substring(1, jsonString.length() - 1);
 
+		
 		JsonObject jsonResponse = stringToJSON(jsonString);
-
-
+		
 		send_timetables(jsonResponse);
 
 		// Delete files

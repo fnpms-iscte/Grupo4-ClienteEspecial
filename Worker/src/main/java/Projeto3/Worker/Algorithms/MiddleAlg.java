@@ -11,7 +11,7 @@ public class MiddleAlg extends Algorithms {
     public void compute(List<Lecture> lectures, List<Room> rooms){
         for(Lecture l : lectures){
             //filters rooms with required characteristic
-            List<Room> characteristic_filtered_rooms = super.getWithCharacteristics(rooms, l.getRequired_room_characteristics());
+            List<Room> characteristic_filtered_rooms = super.getWithCharacteristics(rooms, l.getCaracteristicas_da_sala_pedida_para_a_aula());
              
             //verifies if a room is available and if it is allocates the lecture to it
             super.room_available(l, characteristic_filtered_rooms);

@@ -6,9 +6,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 public class ScheduleResponse {
-    @JsonProperty("Horarios")
+    //@JsonProperty("Horarios")
     public List<Response> Horarios;
-    @JsonProperty("id")
+    //@JsonProperty("id")
     public String id;
 
     public ScheduleResponse(String id, List<Response> Horarios) {
