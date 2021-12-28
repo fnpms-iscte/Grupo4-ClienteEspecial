@@ -5,22 +5,21 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import Projeto3.Worker.Algorithms.IdealAlg;
 import Projeto3.Worker.Algorithms.MiddleAlg;
 import Projeto3.Worker.Algorithms.SimpleAlg;
-import Projeto3.Worker.Loaders.LectureLoader;
-import Projeto3.Worker.Loaders.RoomLoader;
 import Projeto3.Worker.Metrics.ClassCapacityOver;
 import Projeto3.Worker.Metrics.ClassCapacityUnder;
 import Projeto3.Worker.Metrics.RoomAllocationChars;
 import Projeto3.Worker.Models.Lecture;
 import Projeto3.Worker.Models.Response;
+import Projeto3.Worker.Models.ResponseType;
 import Projeto3.Worker.Models.Room;
 import Projeto3.Worker.Models.ScheduleResponse;
 import io.socket.client.IO;
@@ -91,10 +90,12 @@ class Worker {
 	public void upload_jsons(JSONObject body) throws Exception {
 		ArrayList<File> filesList = new ArrayList<File>();
 		JSONArray files = body.getJSONArray("files");
-
+		JsonHandler loader = new JsonHandler(files);
 		// Input: csv
-		List<Room> rooms = new RoomLoader(files.getJSONArray(0)).getRooms();
-		List<Lecture> lectures = new LectureLoader(files.getJSONArray(1)).getLectures();
+		List<Room> rooms = loader.getRooms();
+		//List<Room> rooms = new RoomLoader(files.getJSONArray(0)).getRooms();
+		//List<Lecture> lectures = new LectureLoader(files.getJSONArray(1)).getLectures();
+		List<Lecture> lectures = loader.getLectures();
 		System.out.println("Both files uploaded");
 
 		// Metrics Initialization
@@ -116,13 +117,17 @@ class Worker {
 		List<Lecture> Simple_lectures = new ArrayList<Lecture>();
 		Simple_lectures.addAll(lectures);
 		sa.compute(Simple_lectures, rooms);
-		System.out.println("Basico algoritmo ...");
+		System.out.println("Basic alg ...");
 
 		// Evaluation of metrics
 		Evaluation simple_ev = new Evaluation(Simple_lectures, MetricList);
 
-		Response out1 = new Response("Horario1", "Horario1", Simple_lectures, simple_ev.resultList,
-				simple_ev.bestResult);
+		List<ResponseType> response1 = new ArrayList<ResponseType>();
+		for (Lecture l : Simple_lectures) {
+			response1.add(new ResponseType(l));
+		}
+
+		Response out1 = new Response("Horario1", "Horario1", response1, simple_ev.resultList, simple_ev.bestResult);
 		output.add(out1);
 
 		for (Room r : rooms) {
@@ -138,8 +143,12 @@ class Worker {
 		System.out.println("Middle alg ...");
 
 		Evaluation middle_ev = new Evaluation(Middle_lectures, MetricList);
-		Response out2 = new Response("Horario2", "Horario2", Middle_lectures, middle_ev.resultList,
-				middle_ev.bestResult);
+
+		List<ResponseType> response2 = new ArrayList<ResponseType>();
+		for (Lecture l : Middle_lectures) {
+			response2.add(new ResponseType(l));
+		}
+		Response out2 = new Response("Horario2", "Horario2", response2, middle_ev.resultList,middle_ev.bestResult);
 		output.add(out2);
 
 		for (Room r : rooms) {
@@ -154,7 +163,11 @@ class Worker {
 		ia.compute(Ideal_lectures, rooms);
 
 		Evaluation ideal_ev = new Evaluation(Ideal_lectures, MetricList);
-		Response out3 = new Response("Horario3", "Horario3", Ideal_lectures, ideal_ev.resultList, ideal_ev.bestResult);
+		List<ResponseType> response3 = new ArrayList<ResponseType>();
+		for (Lecture l : Middle_lectures) {
+			response3.add(new ResponseType(l));
+		}
+		Response out3 = new Response("Horario3", "Horario3", response3, ideal_ev.resultList, ideal_ev.bestResult);
 		output.add(out3);
 
 		System.out.println("Ideal alg ...");
@@ -169,6 +182,7 @@ class Worker {
 
 		String jsonString = transfer.ResToJSON(trueOutput);
 		jsonString = jsonString.substring(1, jsonString.length() - 1);
+		System.out.println(jsonString);
 
 		
 		JsonObject jsonResponse = stringToJSON(jsonString);

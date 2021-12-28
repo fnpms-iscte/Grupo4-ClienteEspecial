@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
 
 public class Lecture {
 
+	private int id;
 	private  LinkedList<String> Curso;
 	private  String Unidade_de_execucaoo;
 	private  String Turno;
@@ -32,8 +33,9 @@ public class Lecture {
 	"Características da sala pedida para a aula","Sala da aula" , "Lotação", "Características reais da sala"
 	};
 
-	public Lecture(LinkedList<String> course, String name, String shift, String class_name, int n_students, boolean Free_Spots, boolean Capacity_Overflow,
+	public Lecture(int id, LinkedList<String> course, String name, String shift, String class_name, int n_students, boolean Free_Spots, boolean Capacity_Overflow,
 	String week_day, DateTime start_date, DateTime end_date, String required_room_characteristics) {
+		this.id = id;
 		this.Curso = course;
 		this.Unidade_de_execucaoo = name;
 		this.Turno = shift;
@@ -49,6 +51,11 @@ public class Lecture {
 	}
 
 	
+
+	public int getId() {
+		return id;
+	}
+
 
 	public LinkedList<String> getCurso() {
 		return Curso;
@@ -224,6 +231,7 @@ public class Lecture {
 	public String toString() 
 	{
 		return new ToStringBuilder(this)
+		  .append("ID", id)	
 		  .append("name", Curso)
 		  .append("Unidade_de_execução", Unidade_de_execucaoo)
 		  .append("Turno", Turno)

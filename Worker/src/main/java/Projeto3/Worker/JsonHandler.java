@@ -1,4 +1,4 @@
-package Projeto3.Worker.Loaders;
+package Projeto3.Worker;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,9 +59,8 @@ public class JsonHandler {
         String required_room_characteristics= "";
 
         for (int i = 0; i < this.lecture_file.length(); i++) {
-			JSONObject lectureJson;
             try {
-                lectureJson = this.lecture_file.getJSONObject(i);
+                JSONObject lectureJson = this.lecture_file.getJSONObject(i);
                 Iterator<?> keys = lectureJson.keys();
                 while (keys.hasNext()) {
 
@@ -108,7 +107,7 @@ public class JsonHandler {
                 DateTime end_date = convertDateTime(endS, dateS);
 
                 // Lecture Object Creation
-                Lecture lecture = new Lecture(course, name, shift, class_name, n_students, Turnos_com_capacidade_superior,
+                Lecture lecture = new Lecture(i+1, course, name, shift, class_name, n_students, Turnos_com_capacidade_superior,
                 Turno_com_inscrições_superiores, week_day, start_date, end_date, required_room_characteristics);
                 lectures.add(lecture);	
            } catch (JSONException e) {

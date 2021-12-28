@@ -11,13 +11,13 @@ public class Response {
     @JsonProperty("id")
     private String id;
     @JsonProperty("lectures")
-    private List<Lecture> lectures;
+    private List<ResponseType> lectures;
     @JsonProperty("metrics")
     private List<Metric>  metrics;
     @JsonProperty("best_metric")
     private String  best_metric;
     
-    public Response(String name, String id, List<Lecture> lectures, List<Metric> resultList, String best_metric) {
+    public Response(String name, String id, List<ResponseType> lectures, List<Metric> resultList, String best_metric) {
         this.name = name;
         this.id= id;
         this.lectures = lectures;
@@ -33,7 +33,7 @@ public class Response {
         return id;
     }
     
-    public List<Lecture> getLectures() {
+    public List<ResponseType> getLectures() {
         return lectures;
     }
 
@@ -53,7 +53,7 @@ public class Response {
         this.id= id;
     }
 
-    public void setLectures(List<Lecture> lectures) {
+    public void setLectures(List<ResponseType> lectures) {
         this.lectures = lectures;
     }
 
