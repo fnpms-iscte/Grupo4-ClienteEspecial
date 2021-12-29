@@ -5,8 +5,6 @@ import java.io.IOException;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.joda.JodaModule;
 
 import Projeto3.Worker.Models.ScheduleResponse;
 
@@ -20,8 +18,6 @@ public class ResponseToJSON {
 				.withFieldVisibility(JsonAutoDetect.Visibility.ANY).withGetterVisibility(JsonAutoDetect.Visibility.NONE)
 				.withSetterVisibility(JsonAutoDetect.Visibility.NONE)
 				.withCreatorVisibility(JsonAutoDetect.Visibility.NONE));
-		Obj.registerModule(new JodaModule());
-		Obj.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 		String jsonStr = "{";
 		try {
 			// Converting the Java object into a JSON string
