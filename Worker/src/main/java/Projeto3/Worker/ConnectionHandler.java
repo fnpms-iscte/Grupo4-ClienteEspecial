@@ -33,7 +33,7 @@ public class ConnectionHandler {
 			options.timeout = 500;
 
 			socket = IO.socket(url, options);
-			System.out.println("Connected");
+			System.out.println("[ConnectionHandler] Connected");
 
 			socket.on("welcome", new Emitter.Listener() {
 				@Override
@@ -46,7 +46,7 @@ public class ConnectionHandler {
 			socket.on("message", new Emitter.Listener() {
 				@Override
 				public void call(Object... args) {
-					System.out.println(args[0]); // world
+					System.out.println("[ConnectionHandler] " + args[0]); // world
 				}
 			});
 
