@@ -26,188 +26,128 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
-class Worker {
-	private Socket socket;
+public class Worker {
 
-	public void connection() {
-		String url = "http://localhost:3000/";
-		try {
-			IO.Options options = new IO.Options();
-			options.transports = new String[] { "websocket" };
-			// Number of failed retries
-			options.reconnectionAttempts = 10;
-			// Time interval for failed reconnection
-			options.reconnectionDelay = 1000;
-			// Connection timeout (ms)
-			options.timeout = 500;
-			socket = IO.socket(url, options);
-			System.out.println("Connected");
+    private List<Room> rooms;
+    private List<Lecture> lectures;
+    private List<Metric> metricList;
+    private List<Response> output;
+    private ClassCapacityOver metric1;
+    private ClassCapacityUnder metric2;
+    private RoomAllocationChars metric3;
 
-			socket.on("welcome", new Emitter.Listener() {
-				@Override
-				public void call(Object... args) {
-					System.out.println(args[0]);
-					socket.emit("worker", 659812);
-				}
-			});
+    public void handleJson(JSONObject body) {
+        JSONArray files;
+        output = new ArrayList<Response>();
+        try {
+            files = body.getJSONArray("files");
+            uploadFiles(files);
+            initMetrics();
 
-			socket.on("message", new Emitter.Listener() {
+            output.add(getBasicAlg());
+            output.add(getMiddleAlg());
+            output.add(getIdealAlg());
 
-				@Override
-				public void call(Object... args) {
-					System.out.println(args[0]); // world
-				}
-			});
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-			socket.on("files_to_handle", new Emitter.Listener() {
-				@Override
-				public void call(Object... args) {
-					try {
+    }
 
-						JSONObject body = (JSONObject) args[0];
-						upload_jsons(body);
+    private void uploadFiles(JSONArray files) {
+        JsonHandler loader = new JsonHandler(files);
+        this.rooms = loader.getRooms();
+        this.lectures = loader.getLectures();
+        System.out.println("[Worker] Both files uploaded");
+    }
 
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			});
+    private void initMetrics() {
+        metricList = new ArrayList<>();
+        metric1 = new ClassCapacityOver();
+        metric2 = new ClassCapacityUnder();
+        metric3 = new RoomAllocationChars();
+        metricList.add(metric1);
+        metricList.add(metric2);
+        metricList.add(metric3);
+        System.out.println("[Worker] Initialized Metrics");
+    }
 
-			socket.connect();
+    private Response getBasicAlg() {
+        SimpleAlg sa = new SimpleAlg();
+        List<Lecture> simpleLectures = new ArrayList<>();
+        simpleLectures.addAll(lectures);
+        sa.compute(simpleLectures, rooms);
+        clearLectureOffRoom();
 
-		} catch (URISyntaxException e) {
+        // Evaluation of metrics
+        Evaluation simpleEv = new Evaluation(simpleLectures, metricList);
 
-			e.printStackTrace();
-		}
-	}
+        List<ResponseType> response = new ArrayList<>();
+        for (Lecture l : simpleLectures) {
+            response.add(new ResponseType(l));
+        }
 
-	public static void main(String[] args) {
-		Worker w = new Worker();
-		w.connection();
+        System.out.println("[Worker] Basic alg computed");
 
-	}
+        return new Response("Horario1", "Horario1", response, simpleEv.resultList, simpleEv.bestResult);
+    }
 
-	public void upload_jsons(JSONObject body) throws Exception {
-		ArrayList<File> filesList = new ArrayList<File>();
-		JSONArray files = body.getJSONArray("files");
-		JsonHandler loader = new JsonHandler(files);
-		// Input: csv
-		List<Room> rooms = loader.getRooms();
-		//List<Room> rooms = new RoomLoader(files.getJSONArray(0)).getRooms();
-		//List<Lecture> lectures = new LectureLoader(files.getJSONArray(1)).getLectures();
-		List<Lecture> lectures = loader.getLectures();
-		System.out.println("Both files uploaded");
+    private Response getMiddleAlg() {
+        MiddleAlg ma = new MiddleAlg();
+        List<Lecture> middleLectures = new ArrayList<>();
+        middleLectures.addAll(lectures);
+        ma.compute(middleLectures, rooms);
 
-		// Metrics Initialization
-		ClassCapacityOver metric1 = new ClassCapacityOver();
-		ClassCapacityUnder metric2 = new ClassCapacityUnder();
-		RoomAllocationChars metric3 = new RoomAllocationChars();
+        clearLectureOffRoom();
 
-		List<Metric> MetricList = new ArrayList<Metric>();
-		MetricList.add(metric1);
-		MetricList.add(metric2);
-		MetricList.add(metric3);
-		System.out.println("Metricas inicializadas ...");
+        // Evaluation of metrics
+        Evaluation middleEv = new Evaluation(middleLectures, metricList);
 
-		// Response Initialization
-		List<Response> output = new ArrayList<Response>();
+        List<ResponseType> response = new ArrayList<>();
+        for (Lecture l : middleLectures) {
+            response.add(new ResponseType(l));
+        }
 
-		// Basic Alghoritm that acts as a FIFO
-		SimpleAlg sa = new SimpleAlg();
-		List<Lecture> Simple_lectures = new ArrayList<Lecture>();
-		Simple_lectures.addAll(lectures);
-		sa.compute(Simple_lectures, rooms);
-		System.out.println("Basic alg ...");
+        System.out.println("[Worker] Middle alg computed");
 
-		// Evaluation of metrics
-		Evaluation simple_ev = new Evaluation(Simple_lectures, MetricList);
+        return new Response("Horario2", "Horario2", response, middleEv.resultList, middleEv.bestResult);
+    }
 
-		List<ResponseType> response1 = new ArrayList<ResponseType>();
-		for (Lecture l : Simple_lectures) {
-			response1.add(new ResponseType(l));
-		}
+    private Response getIdealAlg() {
+        IdealAlg ia = new IdealAlg();
+        List<Lecture> idealLectures = new ArrayList<>();
+        idealLectures.addAll(lectures);
+        ia.compute(idealLectures, rooms);
 
-		Response out1 = new Response("Horario1", "Horario1", response1, simple_ev.resultList, simple_ev.bestResult);
-		output.add(out1);
+        clearLectureOffRoom();
 
-		for (Room r : rooms) {
-			r.clearLecture();
-		}
+        // Evaluation of metrics
+        Evaluation idealEv = new Evaluation(idealLectures, metricList);
 
-		// Middle Algorithm that acts based on capacity and required characteristic
-		MiddleAlg ma = new MiddleAlg();
-		List<Lecture> Middle_lectures = new ArrayList<Lecture>();
-		Middle_lectures.addAll(lectures);
-		ma.compute(Middle_lectures, rooms);
+        List<ResponseType> response = new ArrayList<>();
+        for (Lecture l : idealLectures) {
+            response.add(new ResponseType(l));
+        }
 
-		System.out.println("Middle alg ...");
+        System.out.println("[Worker] Ideal alg computed");
 
-		Evaluation middle_ev = new Evaluation(Middle_lectures, MetricList);
+        return new Response("Horario3", "Horario3", response, idealEv.resultList, idealEv.bestResult);
+    }
 
-		List<ResponseType> response2 = new ArrayList<ResponseType>();
-		for (Lecture l : Middle_lectures) {
-			response2.add(new ResponseType(l));
-		}
-		Response out2 = new Response("Horario2", "Horario2", response2, middle_ev.resultList,middle_ev.bestResult);
-		output.add(out2);
+    private void clearLectureOffRoom() {
+        for (Room r : rooms) {
+            r.clearLecture();
+        }
+    }
 
-		for (Room r : rooms) {
-			r.clearLecture();
-		}
+    private JsonObject responseToJson(String clientID, List<Response> output) {
+        ResponseToJSON transfer = new ResponseToJSON();
+        ScheduleResponse trueOutput = new ScheduleResponse(clientID, output);
+        String jsonString = transfer.ResToJSON(trueOutput);
+        jsonString = jsonString.substring(1, jsonString.length() - 1);
+        JsonObject jsonResponse = stringToJSON(jsonString);
 
-		// Ideal Alghoritm that allocates room according to their
-		// capacity/characteristic/availabity
-		IdealAlg ia = new IdealAlg();
-		List<Lecture> Ideal_lectures = new ArrayList<Lecture>();
-		Ideal_lectures.addAll(lectures);
-		ia.compute(Ideal_lectures, rooms);
+        return jsonResponse;
+    }
 
-		Evaluation ideal_ev = new Evaluation(Ideal_lectures, MetricList);
-		List<ResponseType> response3 = new ArrayList<ResponseType>();
-		for (Lecture l : Middle_lectures) {
-			response3.add(new ResponseType(l));
-		}
-		Response out3 = new Response("Horario3", "Horario3", response3, ideal_ev.resultList, ideal_ev.bestResult);
-		output.add(out3);
-
-		System.out.println("Ideal alg ...");
-
-		for (Room r : rooms) {
-			r.clearLecture();
-		}
-
-		ResponseToJSON transfer = new ResponseToJSON();
-
-		ScheduleResponse trueOutput = new ScheduleResponse(body.getString("id"), output);
-
-		String jsonString = transfer.ResToJSON(trueOutput);
-		jsonString = jsonString.substring(1, jsonString.length() - 1);
-		System.out.println(jsonString);
-
-		
-		JsonObject jsonResponse = stringToJSON(jsonString);
-		
-		send_timetables(jsonResponse);
-
-		// Delete files
-		for (File aux : filesList) {
-			aux.delete();
-		}
-
-	}
-
-	public void send_timetables(JsonObject body) {
-		try {
-			socket.emit("results", body);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		System.out.println("Resultados enviados ...");
-	}
-
-	public JsonObject stringToJSON(String jsonString) {
-		JsonObject jsonResponse = (JsonObject) JsonParser.parseString(jsonString);
-		return jsonResponse;
-	}
 }
