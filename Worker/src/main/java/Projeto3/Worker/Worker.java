@@ -1,23 +1,18 @@
 package Projeto3.Worker;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
-import java.io.PrintWriter;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Base64.Encoder;
 import java.util.List;
-
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.opencsv.CSVWriter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.opencsv.CSVWriter;
 
 import Projeto3.Worker.Algorithms.IdealAlg;
 import Projeto3.Worker.Algorithms.MiddleAlg;
@@ -27,7 +22,6 @@ import Projeto3.Worker.Metrics.ClassCapacityUnder;
 import Projeto3.Worker.Metrics.RoomAllocationChars;
 import Projeto3.Worker.Models.Lecture;
 import Projeto3.Worker.Models.Response;
-import Projeto3.Worker.Models.ResponseType;
 import Projeto3.Worker.Models.Room;
 import Projeto3.Worker.Models.ScheduleResponse;
 
@@ -57,8 +51,8 @@ public class Worker {
 			initMetrics();
 
 			output.add(getBasicAlg());
-//			output.add(getMiddleAlg());
-//			output.add(getIdealAlg());
+			output.add(getMiddleAlg());
+			output.add(getIdealAlg());
 
 			return responseToJson(body.getString("id"), output);
 
@@ -97,17 +91,12 @@ public class Worker {
 		// Evaluation of metrics
 		Evaluation simpleEv = new Evaluation(simpleLectures, metricList);
 
-		List<ResponseType> response = new ArrayList<>();
-		for (Lecture l : simpleLectures) {
-			response.add(new ResponseType(l));
-		}
-
 		System.out.println("[Worker] Basic alg computed");
 
 		createCSVfile(simpleLectures, clientID + "_Horario1");
+		System.out.println("[Worker] File Horario1 created\\n");
 
 		return new Response("Horario1", "Horario1", simpleEv.resultList, simpleEv.bestResult);
-//		return new Response("Horario1", "Horario1", response, simpleEv.resultList, simpleEv.bestResult);
 	}
 
 	private Response getMiddleAlg() {
@@ -121,15 +110,11 @@ public class Worker {
 		// Evaluation of metrics
 		Evaluation middleEv = new Evaluation(middleLectures, metricList);
 
-		List<ResponseType> response = new ArrayList<>();
-		for (Lecture l : middleLectures) {
-			response.add(new ResponseType(l));
-		}
-
 		System.out.println("[Worker] Middle alg computed");
+		createCSVfile(middleLectures, clientID + "_Horario2");
+		System.out.println("[Worker] File Horario2 created\n");
 
 		return new Response("Horario2", "Horario2", middleEv.resultList, middleEv.bestResult);
-//		return new Response("Horario2", "Horario2", response, middleEv.resultList, middleEv.bestResult);
 	}
 
 	private Response getIdealAlg() {
@@ -143,15 +128,11 @@ public class Worker {
 		// Evaluation of metrics
 		Evaluation idealEv = new Evaluation(idealLectures, metricList);
 
-		List<ResponseType> response = new ArrayList<>();
-		for (Lecture l : idealLectures) {
-			response.add(new ResponseType(l));
-		}
-
 		System.out.println("[Worker] Ideal alg computed");
+		createCSVfile(idealLectures, clientID + "_Horario3");
+		System.out.println("[Worker] File Horario3 created\n");
 
 		return new Response("Horario3", "Horario3", idealEv.resultList, idealEv.bestResult);
-//		return new Response("Horario3", "Horario3", response, idealEv.resultList, idealEv.bestResult);
 	}
 
 	private void clearLectureOffRoom() {
@@ -186,8 +167,7 @@ public class Worker {
 			// create CSVWriter object filewriter object as parameter
 			CSVWriter writer = new CSVWriter(outputfile, ';', CSVWriter.NO_QUOTE_CHARACTER,
 					CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END);
-			
-			
+
 			// adding header to csv
 			String[] header = { "Curso", "Unidade de execução", "Turno", "Turma",
 					"Inscritos no turno (no 1º semestre é baseado em estimativas)",
@@ -196,27 +176,82 @@ public class Worker {
 					"Características da sala pedida para a aula", "Sala da aula", "Lotação",
 					"Características reais da sala" };
 			writer.writeNext(header);
-			Lecture l = lectures.get(0);
-			// add data to csv
-			String[] data1 = { l.getCurso().toString(), l.getUnidade_de_execucaoo(), l.getTurno(), l.getTurma(),
-					Integer.toString(l.getInscritos_no_turno()),
-					String.valueOf(l.isTurnos_com_capacidade_superior_a_capacidade_das_caracteristicas_das_salas()),
-					String.valueOf(l.isTurno_com_inscricoes_superiores_a_capacidade_das_salas()), l.getDia_da_Semana(),
-					l.getInicio().toString("HH:mm"), l.getFim().toString("HH:mm"), l.getFim().toString("dd-MM-yyyy"),
-					l.getCaracteristicas_da_sala_pedida_para_a_aula(), l.getSala_da_aula(),
-					Integer.toString(l.getLotacao()), l.getCaracteristicas_reais_da_sala().toString() };
-			writer.writeNext(data1);
-			System.out.println("[Worker] File created");
-//			String[] data2 = { "Suraj", "10", "630" };
-//			writer.writeNext(data2);
 
-			// closing writer connection
+			for (Lecture l : lectures) {
+				String[] data = getData(l);
+				writer.writeNext(data);
+			}
+
 			writer.close();
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
+	}
+
+	private String[] getData(Lecture l) {
+		String curso = l.getCurso().toString();
+		String unidade_execucao = l.getUnidade_de_execucaoo();
+		String turno = l.getTurno();
+		String turma = l.getTurma();
+		String isTurnos_com_capacidade_superior_a_capacidade_das_caracteristicas_das_salas = String
+				.valueOf(l.isTurnos_com_capacidade_superior_a_capacidade_das_caracteristicas_das_salas());
+		String isTurno_com_inscricoes_superiores_a_capacidade_das_salas = String
+				.valueOf(l.isTurno_com_inscricoes_superiores_a_capacidade_das_salas());
+		String[] auxData = handleNullfields(l);
+		String[] data = { curso, unidade_execucao, turno, turma, Integer.toString(l.getInscritos_no_turno()),
+				isTurnos_com_capacidade_superior_a_capacidade_das_caracteristicas_das_salas,
+				isTurno_com_inscricoes_superiores_a_capacidade_das_salas, auxData[0], auxData[1], auxData[2],
+				auxData[3], auxData[4], auxData[5], auxData[6], auxData[7] };
+
+		return data;
+	}
+
+	private String[] handleNullfields(Lecture l) {
+		String dia_da_semana = "";
+		if (!l.getDia_da_Semana().equals(null)) {
+			dia_da_semana = l.getDia_da_Semana();
+		}
+
+		String inicio = "";
+		if (l.getInicio() != null) {
+			inicio = l.getInicio().toString("HH:mm");
+		}
+
+		String fim = "";
+		if (l.getFim() != null) {
+			fim = l.getFim().toString("HH:mm");
+		}
+
+		String dia = "";
+		if (l.getFim() != null) {
+			dia = l.getFim().toString("dd-MM-yyyy");
+		}
+
+		String caracteristicas_da_sala_pedida_para_a_aula = "";
+		if (l.getCaracteristicas_da_sala_pedida_para_a_aula() != null) {
+			caracteristicas_da_sala_pedida_para_a_aula = l.getCaracteristicas_da_sala_pedida_para_a_aula();
+		}
+
+		String sala = "";
+		if (l.getSala_da_aula() != null) {
+			sala = l.getSala_da_aula();
+		}
+
+		String lotacao = "";
+		if (!Integer.toString(l.getLotacao()).equals(null)) {
+			lotacao = Integer.toString(l.getLotacao());
+		}
+
+		String caracteristicas_reais_da_sala = "";
+		if (l.getCaracteristicas_reais_da_sala() != null) {
+			caracteristicas_reais_da_sala = l.getCaracteristicas_reais_da_sala().toString();
+		}
+		String[] data = { dia_da_semana, inicio, fim, dia, caracteristicas_da_sala_pedida_para_a_aula, sala, lotacao,
+				caracteristicas_reais_da_sala };
+
+		return data;
 	}
 
 }
