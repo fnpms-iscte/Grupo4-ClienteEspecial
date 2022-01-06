@@ -2,6 +2,8 @@ package Projeto3.Worker;
 
 import java.io.File;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -86,14 +88,14 @@ public class ConnectionHandler {
 
 	private void sendPost(String client_id) {
 		try {
-			System.out.println(client_id.toString() + "_Horario1.csv");
+			File horario1 = new File("./timetables/" + client_id + "_Horario1.csv");
+			File horario2 = new File("./timetables/" + client_id + "_Horario2.csv");
+			File horario3 = new File("./timetables/" + client_id + "_Horario3.csv");
+
 			HttpEntity entity = MultipartEntityBuilder.create()
-					.addBinaryBody("file", new File("./timetables/" + client_id + "_Horario1.csv"), //
-							ContentType.create("text/csv"), client_id + "_Horario1.csv")
-					.addBinaryBody("file", new File("./timetables/" + client_id + "_Horario2.csv"),
-							ContentType.create("text/csv"), client_id + "_Horario2.csv")
-					.addBinaryBody("file", new File("./timetables/" + client_id + "_Horario3.csv"),
-							ContentType.create("text/csv"), client_id + "_Horario3.csv")
+					.addBinaryBody("file", horario1, ContentType.create("text/csv"), client_id + "_Horario1.csv")
+					.addBinaryBody("file", horario2, ContentType.create("text/csv"), client_id + "_Horario2.csv")
+					.addBinaryBody("file", horario3, ContentType.create("text/csv"), client_id + "_Horario3.csv")
 					.build();
 
 			HttpPost request = new HttpPost("http://localhost:3000/csv-files");
@@ -103,10 +105,26 @@ public class ConnectionHandler {
 			HttpClient client = HttpClientBuilder.create().build();
 			HttpResponse response = client.execute(request);
 			System.out.println("[Worker] Server's response: " + response.toString());
+			List<File> files = new ArrayList<File>();
+			files.add(horario1);
+			files.add(horario2);
+			files.add(horario3);
+			deleteFiles(files);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
+	}
+
+	private void deleteFiles(List<File> files) {
+		for (File file : files) {
+			if (!file.delete()) {
+				System.out.println("[Worker] Couldn't delete file " + file.getName());
+			}
+		}
+
+		System.out.println("[Worker] Files deleted");
 	}
 
 	public static void main(String[] args) {

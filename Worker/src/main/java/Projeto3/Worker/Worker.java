@@ -94,7 +94,7 @@ public class Worker {
 		System.out.println("[Worker] Basic alg computed");
 
 		createCSVfile(simpleLectures, clientID + "_Horario1");
-		System.out.println("[Worker] File Horario1 created\\n");
+		System.out.println("[Worker] File Horario1 created");
 
 		return new Response("Horario1", "Horario1", simpleEv.resultList, simpleEv.bestResult);
 	}
@@ -112,7 +112,7 @@ public class Worker {
 
 		System.out.println("[Worker] Middle alg computed");
 		createCSVfile(middleLectures, clientID + "_Horario2");
-		System.out.println("[Worker] File Horario2 created\n");
+		System.out.println("[Worker] File Horario2 created");
 
 		return new Response("Horario2", "Horario2", middleEv.resultList, middleEv.bestResult);
 	}
@@ -130,7 +130,7 @@ public class Worker {
 
 		System.out.println("[Worker] Ideal alg computed");
 		createCSVfile(idealLectures, clientID + "_Horario3");
-		System.out.println("[Worker] File Horario3 created\n");
+		System.out.println("[Worker] File Horario3 created");
 
 		return new Response("Horario3", "Horario3", idealEv.resultList, idealEv.bestResult);
 	}
@@ -154,8 +154,6 @@ public class Worker {
 		JsonObject jsonResponse = stringToJSON(jsonString);
 
 		System.out.println("[Worker] Json response created");
-
-		System.out.println(jsonString);
 		return jsonResponse;
 	}
 
