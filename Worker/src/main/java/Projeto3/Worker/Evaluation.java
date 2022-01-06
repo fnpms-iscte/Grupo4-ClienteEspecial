@@ -21,8 +21,22 @@ public class Evaluation {
 			this.resultList.add(clone);
 		}
 
-		this.bestResult = highestMetric;
+		this.bestResult = getBestMetric(highestMetric);
 
+	}
+
+	private String getBestMetric(String highestMetric) {
+		String aux = "";
+
+		if (highestMetric.equals("ClassCapacityOver")) {
+			aux = "As salas não estão sobrelotadas";
+		} else if (highestMetric.equals("ClassCapacityUnder")) {
+			aux = "As salas não estão a ser desperdiçadas na sua lotação";
+		} else if (highestMetric.equals("RoomAllocationChars")) {
+			aux = "As características pedidas são asseguradas pela sala assignada";
+		}
+
+		return aux;
 	}
 
 }
