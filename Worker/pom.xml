@@ -23,6 +23,23 @@
 	</properties>
 
 	<dependencies>
+
+		<dependency>
+			<groupId>edu.stanford.swrl</groupId>
+			<artifactId>swrlapi-drools-engine</artifactId>
+			<version>2.0.11</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>edu.stanford.swrl</groupId>
+			<artifactId>swrlapi</artifactId>
+			<version>2.0.11</version>
+		</dependency>
+
+
+
+		
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
