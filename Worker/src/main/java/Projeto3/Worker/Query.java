@@ -14,8 +14,7 @@ import org.swrlapi.sqwrl.exceptions.SQWRLException;
 
 public class Query {
     public static void main(String[] args){
-      File owlFile = new File("Worker/ADS.owl");
-      System.out.println(owlFile.getAbsolutePath());
+      File owlFile = new File("./ADS.owl");
       try {
         // Loading an OWL ontology using the OWLAPI
         OWLOntologyManager ontologyManager = OWLManager.createOWLOntologyManager();
