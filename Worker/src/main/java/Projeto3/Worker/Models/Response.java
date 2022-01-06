@@ -10,17 +10,19 @@ public class Response {
     private String name;
     @JsonProperty("id")
     private String id;
-    @JsonProperty("lectures")
-    private List<ResponseType> lectures;
+//    @JsonProperty("lectures")
+//    private List<ResponseType> lectures;
     @JsonProperty("metrics")
     private List<Metric>  metrics;
     @JsonProperty("best_metric")
     private String  best_metric;
     
-    public Response(String name, String id, List<ResponseType> lectures, List<Metric> resultList, String best_metric) {
+//    public Response(String name, String id, List<ResponseType> lectures, List<Metric> resultList, String best_metric) {
+    
+    public Response(String name, String id, List<Metric> resultList, String best_metric) {
         this.name = name;
         this.id= id;
-        this.lectures = lectures;
+//        this.lectures = lectures;
         this.metrics = resultList;
         this.best_metric = best_metric;
     }
@@ -33,9 +35,9 @@ public class Response {
         return id;
     }
     
-    public List<ResponseType> getLectures() {
-        return lectures;
-    }
+//    public List<ResponseType> getLectures() {
+//        return lectures;
+//    }
 
     public List<Metric> getMetrics() {
         return metrics;
@@ -53,9 +55,9 @@ public class Response {
         this.id= id;
     }
 
-    public void setLectures(List<ResponseType> lectures) {
-        this.lectures = lectures;
-    }
+//    public void setLectures(List<ResponseType> lectures) {
+//        this.lectures = lectures;
+//    }
 
     public void setMetrics(List<Metric> metrics) {
         this.metrics = metrics;
