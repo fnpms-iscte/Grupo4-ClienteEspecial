@@ -1,10 +1,19 @@
 package Projeto3.Worker;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Base64.Encoder;
 import java.util.List;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.opencsv.CSVWriter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,8 +40,15 @@ public class Worker {
 	private ClassCapacityOver metric1;
 	private ClassCapacityUnder metric2;
 	private RoomAllocationChars metric3;
+	private String clientID;
 
 	public JsonObject handleJson(JSONObject body) {
+		try {
+			clientID = body.getString("id");
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+		System.out.println("[Worker] Cliente ID: " + clientID);
 		JSONArray files;
 		output = new ArrayList<Response>();
 		try {
@@ -41,8 +57,8 @@ public class Worker {
 			initMetrics();
 
 			output.add(getBasicAlg());
-			output.add(getMiddleAlg());
-			output.add(getIdealAlg());
+//			output.add(getMiddleAlg());
+//			output.add(getIdealAlg());
 
 			return responseToJson(body.getString("id"), output);
 
@@ -88,7 +104,10 @@ public class Worker {
 
 		System.out.println("[Worker] Basic alg computed");
 
-		return new Response("Horario1", "Horario1", response, simpleEv.resultList, simpleEv.bestResult);
+		createCSVfile(simpleLectures, clientID + "_Horario1");
+
+		return new Response("Horario1", "Horario1", simpleEv.resultList, simpleEv.bestResult);
+//		return new Response("Horario1", "Horario1", response, simpleEv.resultList, simpleEv.bestResult);
 	}
 
 	private Response getMiddleAlg() {
@@ -109,7 +128,8 @@ public class Worker {
 
 		System.out.println("[Worker] Middle alg computed");
 
-		return new Response("Horario2", "Horario2", response, middleEv.resultList, middleEv.bestResult);
+		return new Response("Horario2", "Horario2", middleEv.resultList, middleEv.bestResult);
+//		return new Response("Horario2", "Horario2", response, middleEv.resultList, middleEv.bestResult);
 	}
 
 	private Response getIdealAlg() {
@@ -130,7 +150,8 @@ public class Worker {
 
 		System.out.println("[Worker] Ideal alg computed");
 
-		return new Response("Horario3", "Horario3", response, idealEv.resultList, idealEv.bestResult);
+		return new Response("Horario3", "Horario3", idealEv.resultList, idealEv.bestResult);
+//		return new Response("Horario3", "Horario3", response, idealEv.resultList, idealEv.bestResult);
 	}
 
 	private void clearLectureOffRoom() {
@@ -153,7 +174,49 @@ public class Worker {
 
 		System.out.println("[Worker] Json response created");
 
+		System.out.println(jsonString);
 		return jsonResponse;
+	}
+
+	private void createCSVfile(List<Lecture> lectures, String name) {
+		File file = new File("./timetables/" + name + ".csv");
+		try {
+			FileWriter outputfile = new FileWriter(file, StandardCharsets.ISO_8859_1);
+
+			// create CSVWriter object filewriter object as parameter
+			CSVWriter writer = new CSVWriter(outputfile, ';', CSVWriter.NO_QUOTE_CHARACTER,
+					CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END);
+			
+			
+			// adding header to csv
+			String[] header = { "Curso", "Unidade de execução", "Turno", "Turma",
+					"Inscritos no turno (no 1º semestre é baseado em estimativas)",
+					"Turnos com capacidade superior à capacidade das características das salas",
+					"Turno com inscrições superiores à capacidade das salas", "Dia da Semana", "Início", "Fim", "Dia",
+					"Características da sala pedida para a aula", "Sala da aula", "Lotação",
+					"Características reais da sala" };
+			writer.writeNext(header);
+			Lecture l = lectures.get(0);
+			// add data to csv
+			String[] data1 = { l.getCurso().toString(), l.getUnidade_de_execucaoo(), l.getTurno(), l.getTurma(),
+					Integer.toString(l.getInscritos_no_turno()),
+					String.valueOf(l.isTurnos_com_capacidade_superior_a_capacidade_das_caracteristicas_das_salas()),
+					String.valueOf(l.isTurno_com_inscricoes_superiores_a_capacidade_das_salas()), l.getDia_da_Semana(),
+					l.getInicio().toString("HH:mm"), l.getFim().toString("HH:mm"), l.getFim().toString("dd-MM-yyyy"),
+					l.getCaracteristicas_da_sala_pedida_para_a_aula(), l.getSala_da_aula(),
+					Integer.toString(l.getLotacao()), l.getCaracteristicas_reais_da_sala().toString() };
+			writer.writeNext(data1);
+			System.out.println("[Worker] File created");
+//			String[] data2 = { "Suraj", "10", "630" };
+//			writer.writeNext(data2);
+
+			// closing writer connection
+			writer.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 
 }
