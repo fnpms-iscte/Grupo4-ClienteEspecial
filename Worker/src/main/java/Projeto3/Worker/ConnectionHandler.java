@@ -88,10 +88,10 @@ public class ConnectionHandler {
 
 	private void sendPost(String client_id) {
 		try {
-			File horario1 = new File("Worker/timetables/" + client_id + "_Horario1.csv");
-			File horario2 = new File("Worker/timetables/" + client_id + "_Horario2.csv");
-			File horario3 = new File("Worker/timetables/" + client_id + "_Horario3.csv");
-			File horario4 = new File("Worker/timetables/" + client_id + "_Horario4.csv");
+			File horario1 = new File("./timetables/" + client_id + "_Horario1.csv");
+			File horario2 = new File("./timetables/" + client_id + "_Horario2.csv");
+			File horario3 = new File("./timetables/" + client_id + "_Horario3.csv");
+			File horario4 = new File("./timetables/" + client_id + "_Horario4.csv");
 
 
 			HttpEntity entity = MultipartEntityBuilder.create()

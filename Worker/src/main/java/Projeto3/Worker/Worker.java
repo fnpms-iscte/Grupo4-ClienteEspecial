@@ -57,9 +57,11 @@ public class Worker {
 			output.add(getMiddleAlg());
 			output.add(getIdealAlg());
 			output.add(getPerfectAlg());
-
+			
 			algsnames = runQuery();
 			System.out.println(algsnames);
+			
+			List<Lecture> jmetalL = getLecturesNoRoom(lectures);
 			
 			return responseToJson(body.getString("id"), output);
 
@@ -69,6 +71,18 @@ public class Worker {
 		}
 
 	}
+	
+	private List<Lecture> getLecturesNoRoom(List<Lecture> lectures){
+		
+		List<Lecture> auxLectures = new ArrayList<Lecture>();
+		for (Lecture l : lectures) {
+			if(!l.hasRoom())
+				auxLectures.add(l);
+		}
+		return auxLectures;
+	}
+	
+	
 
 	private void uploadFiles(JSONArray files) {
 		JsonHandler loader = new JsonHandler(files);
@@ -94,7 +108,8 @@ public class Worker {
 		simpleLectures.addAll(lectures);
 		sa.compute(simpleLectures, rooms);
 		clearLectureOffRoom();
-
+		clearLectures();
+		
 		// Evaluation of metrics
 		Evaluation simpleEv = new Evaluation(simpleLectures, metricList);
 
@@ -102,7 +117,8 @@ public class Worker {
 
 		createCSVfile(simpleLectures, clientID + "_Horario1");
 		System.out.println("[Worker] File Horario1 created");
-
+		clearLectures();
+		
 		return new Response("Horario1", "Horario1", simpleEv.resultList, simpleEv.bestResult);
 	}
 
@@ -120,7 +136,7 @@ public class Worker {
 		System.out.println("[Worker] Middle alg computed");
 		createCSVfile(middleLectures, clientID + "_Horario2");
 		System.out.println("[Worker] File Horario2 created");
-
+		clearLectures();
 		return new Response("Horario2", "Horario2", middleEv.resultList, middleEv.bestResult);
 	}
 
@@ -138,7 +154,11 @@ public class Worker {
 		System.out.println("[Worker] Ideal alg computed");
 		createCSVfile(idealLectures, clientID + "_Horario3");
 		System.out.println("[Worker] File Horario3 created");
-
+		
+		
+		
+		
+		///clearLectures();
 		return new Response("Horario3", "Horario3", idealEv.resultList, idealEv.bestResult);
 	}
 
@@ -156,7 +176,7 @@ public class Worker {
 		System.out.println("[Worker] perfect alg computed");
 		createCSVfile(perfectLectures, clientID + "_Horario4");
 		System.out.println("[Worker] File Horario4 created");
-
+		clearLectures();
 		return new Response("Horario4", "Horario4", perfectEv.resultList, perfectEv.bestResult);
 	}
 
@@ -173,6 +193,15 @@ public class Worker {
 			r.clearLecture();
 		}
 	}
+	
+	
+	private void clearLectures() {
+		for (Lecture l : lectures) {
+			l.cleanRoom();
+		}
+	}
+	
+	
 
 	private JsonObject stringToJSON(String jsonString) {
 		JsonObject jsonResponse = (JsonObject) JsonParser.parseString(jsonString);
@@ -193,7 +222,7 @@ public class Worker {
 	private void createCSVfile(List<Lecture> lectures, String name) {
 		File file = new File("./timetables/" + name + ".csv");
 		try {
-			FileWriter outputfile = new FileWriter(file, StandardCharsets.ISO_8859_1);
+			FileWriter outputfile = new FileWriter(file); /*, StandardCharsets.ISO_8859_1);*/
 
 			// create CSVWriter object filewriter object as parameter
 			CSVWriter writer = new CSVWriter(outputfile, ';', CSVWriter.NO_QUOTE_CHARACTER,

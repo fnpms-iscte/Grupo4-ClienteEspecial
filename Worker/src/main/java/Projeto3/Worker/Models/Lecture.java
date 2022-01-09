@@ -226,6 +226,15 @@ public class Lecture {
 	}
 
 
+	public void cleanRoom() {
+		this.Sala_da_aula = "";
+		this.Lotacao = 0;
+		this.Caracteristicas_reais_da_sala = null;
+	}
+	
+	public boolean hasRoom() {
+		return this.Sala_da_aula != "";
+	}
 
 	@Override
 	public String toString() 

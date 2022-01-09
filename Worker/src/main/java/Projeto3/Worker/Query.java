@@ -20,7 +20,7 @@ public class Query {
 
     public static ArrayList runQuery(){
 
-      File owlFile = new File("Worker/ADS.owl");
+      File owlFile = new File("./ADS.owl");
       ArrayList names = new ArrayList<String>();
 
       try {

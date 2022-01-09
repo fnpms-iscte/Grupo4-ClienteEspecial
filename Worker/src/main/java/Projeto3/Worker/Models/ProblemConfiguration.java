@@ -1,6 +1,8 @@
 package Projeto3.Worker.Models;
 
-public class ProblemConfiguration {
+import org.uma.jmetal.problem;
+
+public class ProblemConfiguration extends Problem {
     
 
 
