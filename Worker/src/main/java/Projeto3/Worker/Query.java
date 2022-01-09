@@ -1,6 +1,8 @@
 package Projeto3.Worker;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.OWLOntology;
@@ -13,8 +15,14 @@ import org.swrlapi.sqwrl.SQWRLResult;
 import org.swrlapi.sqwrl.exceptions.SQWRLException;
 
 public class Query {
-    public static void main(String[] args){
-      File owlFile = new File("./ADS.owl");
+
+
+
+    public static ArrayList runQuery(){
+
+      File owlFile = new File("Worker/ADS.owl");
+      ArrayList names = new ArrayList<String>();
+
       try {
         // Loading an OWL ontology using the OWLAPI
         OWLOntologyManager ontologyManager = OWLManager.createOWLOntologyManager();
@@ -24,21 +32,18 @@ public class Query {
         SQWRLQueryEngine queryEngine = SWRLAPIFactory.createSQWRLQueryEngine(ontology);
   
         // Create and execute a SQWRL query using the SWRLAPI
-        // Os algoritmos que funcionam bem para problemas com 2,3,4,etc. objetivps são diferentes
         String numberOfObjectives = "3";
         String query = "Algorithm(?alg) ^ "   
           + "minObjectivesAlgorithmIsAbleToDealWith(?alg,?min) ^ swrlb:lessThanOrEqual(?min,"+numberOfObjectives+")"
           + "maxObjectivesAlgorithmIsAbleToDealWith(?alg,?max) ^ swrlb:greaterThanOrEqual(?max,"+numberOfObjectives+")"
           + " -> sqwrl:select(?alg) ^ sqwrl:orderBy(?alg)";  
-        SQWRLResult result = queryEngine.runSQWRLQuery("q1", query);
+          SQWRLResult result = queryEngine.runSQWRLQuery("q1", query);
   
         // Process the SQWRL result
         System.out.println("Query: \n" + query + "\n");
-        System.out.println("Result: ");
         while (result.next()) {
-            System.out.println(result.getNamedIndividual("alg").getShortName());
-        }
-        
+            names.add(result.getNamedIndividual("alg").getShortName());
+        }        
       } catch (OWLOntologyCreationException e) {
         System.err.println("Error creating OWL ontology: " + e.getMessage());
         System.exit(-1);
@@ -52,5 +57,6 @@ public class Query {
         System.err.println("Error starting application: " + e.getMessage());
         System.exit(-1);
       }
+      return names;
     }
 }

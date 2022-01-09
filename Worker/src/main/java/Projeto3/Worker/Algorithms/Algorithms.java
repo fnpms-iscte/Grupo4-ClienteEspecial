@@ -58,6 +58,19 @@ public abstract class Algorithms {
 		}
 		return output;
 	} 
+
+    //Returns a list of rooms that can hold said lecture with x students there
+    public static LinkedList<Room> getWithReasonableCapacity(List<Room> rooms, int lecture_capacity){
+        final LinkedList<Room> output = new LinkedList<>();
+        for (Room r :rooms){
+            int aux = r.getNormal_capacity() - lecture_capacity;
+            if (aux <= 10){
+                output.add(r);
+            }
+        }
+        return output;
+    } 
+    
     
     //Allocates a room to the lecture and a booking to the same room
     public void allocate(Lecture l , Room r , Interval new_booking){

@@ -16,6 +16,7 @@ import com.opencsv.CSVWriter;
 
 import Projeto3.Worker.Algorithms.IdealAlg;
 import Projeto3.Worker.Algorithms.MiddleAlg;
+import Projeto3.Worker.Algorithms.PerfectAlg;
 import Projeto3.Worker.Algorithms.SimpleAlg;
 import Projeto3.Worker.Metrics.ClassCapacityOver;
 import Projeto3.Worker.Metrics.ClassCapacityUnder;
@@ -35,6 +36,7 @@ public class Worker {
 	private ClassCapacityUnder metric2;
 	private RoomAllocationChars metric3;
 	private String clientID;
+	private List<String> algsnames;
 
 	public JsonObject handleJson(JSONObject body) {
 		try {
@@ -45,15 +47,20 @@ public class Worker {
 		System.out.println("[Worker] Cliente ID: " + clientID);
 		JSONArray files;
 		output = new ArrayList<Response>();
+		algsnames = new ArrayList<String>();
 		try {
 			files = body.getJSONArray("files");
 			uploadFiles(files);
 			initMetrics();
-
+			
 			output.add(getBasicAlg());
 			output.add(getMiddleAlg());
 			output.add(getIdealAlg());
+			output.add(getPerfectAlg());
 
+			algsnames = runQuery();
+			System.out.println(algsnames);
+			
 			return responseToJson(body.getString("id"), output);
 
 		} catch (JSONException e) {
@@ -133,6 +140,32 @@ public class Worker {
 		System.out.println("[Worker] File Horario3 created");
 
 		return new Response("Horario3", "Horario3", idealEv.resultList, idealEv.bestResult);
+	}
+
+	private Response getPerfectAlg() {
+		PerfectAlg pa = new PerfectAlg();
+		List<Lecture> perfectLectures = new ArrayList<>();
+		perfectLectures.addAll(lectures);
+		pa.compute(perfectLectures, rooms);
+
+		clearLectureOffRoom();
+
+		// Evaluation of metrics
+		Evaluation perfectEv = new Evaluation(perfectLectures, metricList);
+
+		System.out.println("[Worker] perfect alg computed");
+		createCSVfile(perfectLectures, clientID + "_Horario4");
+		System.out.println("[Worker] File Horario4 created");
+
+		return new Response("Horario4", "Horario4", perfectEv.resultList, perfectEv.bestResult);
+	}
+
+
+
+
+
+	private List<String> runQuery(){
+		return Query.runQuery();
 	}
 
 	private void clearLectureOffRoom() {
@@ -251,5 +284,8 @@ public class Worker {
 
 		return data;
 	}
+
+
+
 
 }
