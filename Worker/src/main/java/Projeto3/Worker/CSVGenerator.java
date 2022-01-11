@@ -12,15 +12,13 @@ import Projeto3.Worker.Models.Lecture;
 public class CSVGenerator {
 
 	public void createCSVfile(List<Lecture> lectures, String name) {
-		File file = new File( "./timetables/" + name + ".csv");
+		File file = new File("./timetables/" + name + ".csv");
 		try {
 			FileWriter outputfile = new FileWriter(file, StandardCharsets.ISO_8859_1);
 
-			// create CSVWriter object filewriter object as parameter
 			CSVWriter writer = new CSVWriter(outputfile, ';', CSVWriter.NO_QUOTE_CHARACTER,
 					CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END);
 
-			// adding header to csv
 			String[] header = { "Curso", "Unidade de execução", "Turno", "Turma",
 					"Inscritos no turno (no 1º semestre é baseado em estimativas)",
 					"Turnos com capacidade superior à capacidade das características das salas",

@@ -5,13 +5,17 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joda.time.Interval;
+
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 
 import Projeto3.Worker.Algorithms.IdealAlg;
 import Projeto3.Worker.Algorithms.MiddleAlg;
+import Projeto3.Worker.Algorithms.NSGAIIIRunner;
 import Projeto3.Worker.Algorithms.NSGAIIRunner;
 import Projeto3.Worker.Algorithms.PerfectAlg;
+import Projeto3.Worker.Algorithms.SMSEMOARunner;
 import Projeto3.Worker.Algorithms.SimpleAlg;
 import Projeto3.Worker.Metrics.ClassCapacityOver;
 import Projeto3.Worker.Metrics.ClassCapacityUnder;
@@ -74,10 +78,10 @@ public class AlgorithmsHandler {
 
 		System.out.println("[AlgorithmsHandler] Basic alg computed");
 
-		csv_generate.createCSVfile(simpleLectures, clientID + "_Horario1");
+		csv_generate.createCSVfile(simpleLectures, clientID + "_Horario1-Simple");
 		System.out.println("[AlgorithmsHandler] File Horario1 created");
 
-		output.add(new Response("Horario1", "Horario1", simpleEv.resultList, simpleEv.bestResult));
+		output.add(new Response("Horario1-Simple", "Horario1-Simple", simpleEv.resultList, simpleEv.bestResult));
 
 	}
 
@@ -92,10 +96,10 @@ public class AlgorithmsHandler {
 		Evaluation middleEv = new Evaluation(middleLectures, metricList);
 
 		System.out.println("[AlgorithmsHandler] Middle alg computed");
-		csv_generate.createCSVfile(middleLectures, clientID + "_Horario2");
+		csv_generate.createCSVfile(middleLectures, clientID + "_Horario2-Middle");
 		System.out.println("[AlgorithmsHandler] File Horario2 created");
 
-		output.add(new Response("Horario2", "Horario2", middleEv.resultList, middleEv.bestResult));
+		output.add(new Response("Horario2-Middle", "Horario2-Middle", middleEv.resultList, middleEv.bestResult));
 		clearLecturesRooms();
 	}
 
@@ -110,9 +114,9 @@ public class AlgorithmsHandler {
 		Evaluation idealEv = new Evaluation(idealLectures, metricList);
 
 		System.out.println("[AlgorithmsHandler] Ideal alg computed");
-		csv_generate.createCSVfile(idealLectures, clientID + "_Horario3");
+		csv_generate.createCSVfile(idealLectures, clientID + "_Horario3-Ideal");
 		System.out.println("[AlgorithmsHandler] File Horario3 created");
-		output.add(new Response("Horario3", "Horario3", idealEv.resultList, idealEv.bestResult));
+		output.add(new Response("Horario3-Ideal", "Horario3-Ideal", idealEv.resultList, idealEv.bestResult));
 
 	}
 
@@ -127,9 +131,9 @@ public class AlgorithmsHandler {
 		Evaluation perfectEv = new Evaluation(perfectLectures, metricList);
 
 		System.out.println("[AlgorithmsHandler] perfect alg computed");
-		csv_generate.createCSVfile(perfectLectures, clientID + "_Horario4");
+		csv_generate.createCSVfile(perfectLectures, clientID + "_Horario4-Perfect");
 		System.out.println("[AlgorithmsHandler] File Horario4 created");
-		output.add(new Response("Horario4", "Horario4", perfectEv.resultList, perfectEv.bestResult));
+		output.add(new Response("Horario4-Perfect", "Horario4-Perfect", perfectEv.resultList, perfectEv.bestResult));
 
 		return perfectLectures;
 	}
@@ -137,7 +141,7 @@ public class AlgorithmsHandler {
 	public void runNSGAII(List<Lecture> lectures, List<Room> rooms) {
 		NSGAIIRunner nsgaii = new NSGAIIRunner(lectures, rooms);
 		nsgaii.runAlg();
-		String[] lectures_nsgaii = readCSV();
+		String[] lectures_nsgaii = readCSV("NSGAII");
 		allocateRoomsToLectures(lectures_nsgaii);
 		List<Lecture> nsgaiiLectures = lectures;
 
@@ -148,12 +152,39 @@ public class AlgorithmsHandler {
 		output.add(new Response("Horario5-NSGAII", "Horario5-NSGAII", nsgaiiEv.resultList, nsgaiiEv.bestResult));
 	}
 
-	private String[] readCSV() {
-		String path = "./RESULTADOS/NSGAIIStudy/data/NSGAII/ProblemConfiguration/";
+	public void runNSGAIII(List<Lecture> lectures, List<Room> rooms) {
+		NSGAIIIRunner nsgaiii = new NSGAIIIRunner(lectures, rooms);
+		nsgaiii.runAlg();
+		String[] lectures_nsgaiii = readCSV("NSGAIII");
+		allocateRoomsToLectures(lectures_nsgaiii);
+		List<Lecture> nsgaiiiLectures = lectures;
+
+		Evaluation nsgaiiiEv = new Evaluation(nsgaiiiLectures, metricList);
+		System.out.println("[AlgorithmsHandler] perfect alg computed");
+		csv_generate.createCSVfile(nsgaiiiLectures, clientID + "_Horario6-NSGAIII");
+		System.out.println("[AlgorithmsHandler] File Horario6-NSGAIII created");
+		output.add(new Response("Horario6-NSGAII", "Horario6-NSGAIII", nsgaiiiEv.resultList, nsgaiiiEv.bestResult));
+	}
+
+	public void runSMSEMOA(List<Lecture> lectures, List<Room> rooms) {
+		SMSEMOARunner smsemoa = new SMSEMOARunner(lectures, rooms);
+		smsemoa.runAlg();
+		String[] lectures_smsemoa = readCSV("SMSEMOA");
+		allocateRoomsToLectures(lectures_smsemoa);
+		List<Lecture> smsemoaLectures = lectures;
+
+		Evaluation smsemoaEv = new Evaluation(smsemoaLectures, metricList);
+		System.out.println("[AlgorithmsHandler] perfect alg computed");
+		csv_generate.createCSVfile(smsemoaLectures, clientID + "_Horario7-SMSEMOA");
+		System.out.println("[AlgorithmsHandler] File Horario6-NSGAIII created");
+		output.add(new Response("Horario7-SMSEMOA", "Horario7-SMSEMOA", smsemoaEv.resultList, smsemoaEv.bestResult));
+	}
+
+	private String[] readCSV(String name) {
+		String path = "./RESULTADOS/" + name + "Study/data/" + name + "/ProblemConfiguration/";
 		String[] allData = null;
 		File var = new File(path + "VAR0.csv");
 		File fun = new File(path + "FUN0.csv");
-
 		try {
 			FileReader filereader = new FileReader(var);
 			CSVReader csvReader = new CSVReaderBuilder(filereader).build();
@@ -162,7 +193,7 @@ public class AlgorithmsHandler {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		var.delete();
 		fun.delete();
 
@@ -172,10 +203,20 @@ public class AlgorithmsHandler {
 
 	private void allocateRoomsToLectures(String[] data) {
 		int count = 0;
+		boolean allocate;
 		for (Lecture l : lectures) {
+			allocate = true;
 			if (!l.getCaracteristicas_da_sala_pedida_para_a_aula().equals("Não necessita de sala") && !l.hasRoom()
 					&& !l.getDia_da_Semana().equals("Not Given")) {
-				l.setRoom(rooms.get(count));
+				Interval new_booking = new Interval(l.getInicio(), l.getFim());
+				for (Interval interval : rooms.get(count).getLectures_times_booked()) {
+					if (interval.overlaps(new_booking)) {
+						allocate = false;
+					}
+				}
+				if (allocate) {
+					l.setRoom(rooms.get(count));
+				}
 				count++;
 			}
 		}

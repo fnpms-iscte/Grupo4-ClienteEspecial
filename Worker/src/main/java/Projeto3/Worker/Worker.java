@@ -50,6 +50,7 @@ public class Worker {
 			algHandler.runBasicAlg();
 			algHandler.runMiddleAlg();
 			algHandler.runIdealAlg();
+			
 			// Run algorithm and returns the list of lectures to use in jMetal
 			List<Lecture> jmetalLectures = algHandler.runPerfectAlg();
 
@@ -74,12 +75,12 @@ public class Worker {
 	private void runQuery(List<Lecture> jMetallectures) {
 		List<String> algsnames = Query.runQuery();
 		for (String s : algsnames) {
+			System.out.println(s);
 			if (s.equalsIgnoreCase(":nsgaii")) {
 				algHandler.runNSGAII(jMetallectures, rooms);
 			} else {
 				System.out.println("[Worker] Algorithm " + s + " not defined.");
 			}
-
 		}
 	}
 

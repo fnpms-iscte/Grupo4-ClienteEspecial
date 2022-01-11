@@ -88,17 +88,17 @@ public class ConnectionHandler {
 
 	private void sendPost(String client_id) {
 		try {
-			File horario1 = new File("./timetables/" + client_id + "_Horario1.csv");
-			File horario2 = new File("./timetables/" + client_id + "_Horario2.csv");
-			File horario3 = new File("./timetables/" + client_id + "_Horario3.csv");
-			File horario4 = new File("./timetables/" + client_id + "_Horario4.csv");
+			File horario1 = new File("./timetables/" + client_id + "_Horario1-Simple.csv");
+			File horario2 = new File("./timetables/" + client_id + "_Horario2-Middle.csv");
+			File horario3 = new File("./timetables/" + client_id + "_Horario3-Ideal.csv");
+			File horario4 = new File("./timetables/" + client_id + "_Horario4-Perfect.csv");
 			File horario5 = new File("./timetables/" + client_id + "_Horario5-NSGAII.csv");
 
 			HttpEntity entity = MultipartEntityBuilder.create()
-					.addBinaryBody("file", horario1, ContentType.create("text/csv"), client_id + "_Horario1.csv")
-					.addBinaryBody("file", horario2, ContentType.create("text/csv"), client_id + "_Horario2.csv")
-					.addBinaryBody("file", horario3, ContentType.create("text/csv"), client_id + "_Horario3.csv")
-					.addBinaryBody("file", horario4, ContentType.create("text/csv"), client_id + "_Horario4.csv")
+					.addBinaryBody("file", horario1, ContentType.create("text/csv"), client_id + "_Horario1-Simple.csv")
+					.addBinaryBody("file", horario2, ContentType.create("text/csv"), client_id + "_Horario2-Middle.csv")
+					.addBinaryBody("file", horario3, ContentType.create("text/csv"), client_id + "_Horario3-Ideal.csv")
+					.addBinaryBody("file", horario4, ContentType.create("text/csv"), client_id + "_Horario4-Perfect.csv")
 					.addBinaryBody("file", horario5, ContentType.create("text/csv"), client_id + "_Horario5-NSGAII.csv")
 					.build();
 
@@ -143,4 +143,5 @@ public class ConnectionHandler {
 //		ConnectionHandler conn = new ConnectionHandler("https://projeto-ads-3-grupo4.herokuapp.com/");
 //		conn.initConnection();
 //	}
+
 }
