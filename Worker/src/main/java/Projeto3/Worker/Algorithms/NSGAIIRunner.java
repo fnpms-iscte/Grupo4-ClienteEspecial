@@ -38,7 +38,6 @@ public class NSGAIIRunner {
 	}
 
 	public void runAlg() {
-		System.out.println(1);
 
 		String experimentBaseDirectory = "RESULTADOS";
 		List<ExperimentProblem<IntegerSolution>> problemList = new ArrayList<>();
@@ -75,8 +74,6 @@ public class NSGAIIRunner {
 						.setNumberOfCores(8)
 
 						.build();
-		System.out.println(2);
-		System.out.println("fim");
 		new ExecuteAlgorithms<>(experiment).run();
 
 	}
@@ -86,33 +83,16 @@ public class NSGAIIRunner {
 			List<ExperimentProblem<IntegerSolution>> problemList) {
 
 		List<ExperimentAlgorithm<IntegerSolution, List<IntegerSolution>>> algorithms = new ArrayList<>();
-		System.out.println(4);
 		for (int run = 0; run < INDEPENDENT_RUNS; run++) {
 
 			for (int i = 0; i < problemList.size(); i++) {
 
 				Algorithm<List<IntegerSolution>> algorithm =
 
-//						new NSGAIIBuilder<>(
-//
-//								problemList.get(i).getProblem(),
-//
-//								new SBXCrossover(1.0, 5), //
-//
-//								new PolynomialMutation(
-//
-//										1.0 / problemList.get(i).getProblem().getNumberOfVariables(), 10.0),
-//
-//								100)
-//
-//										.setMaxEvaluations(2500)
-//
-//										.build();
-
 						new NSGAIIBuilder<>(problemList.get(i).getProblem(), new IntegerSBXCrossover(1.0, 5),
 								new IntegerPolynomialMutation(
 										1.0 / problemList.get(i).getProblem().getNumberOfVariables(), 10.0),
-								100).setMaxEvaluations(5).build();
+								100).setMaxEvaluations(3).build();
 
 				algorithms.add(new ExperimentAlgorithm<>(algorithm, "NSGAII", problemList.get(i), run));
 

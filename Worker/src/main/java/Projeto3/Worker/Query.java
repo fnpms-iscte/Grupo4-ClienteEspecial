@@ -18,7 +18,7 @@ public class Query {
 
 	public static ArrayList<String> runQuery() {
 
-		File owlFile = new File("Worker/ADS.owl");
+		File owlFile = new File("./ADS.owl");
 		ArrayList<String> names = new ArrayList<String>();
 
 		try {

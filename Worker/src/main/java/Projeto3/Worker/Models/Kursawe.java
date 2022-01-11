@@ -28,6 +28,7 @@ public class Kursawe extends AbstractDoubleProblem {
 		setNumberOfVariables(numberOfVariables);
 		setNumberOfObjectives(2);
 		setName("Kursawe");
+		
 
 		List<Double> lowerLimit = new ArrayList<>(getNumberOfVariables());
 		List<Double> upperLimit = new ArrayList<>(getNumberOfVariables());

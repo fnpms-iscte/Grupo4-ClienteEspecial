@@ -92,13 +92,14 @@ public class ConnectionHandler {
 			File horario2 = new File("./timetables/" + client_id + "_Horario2.csv");
 			File horario3 = new File("./timetables/" + client_id + "_Horario3.csv");
 			File horario4 = new File("./timetables/" + client_id + "_Horario4.csv");
-
+			File horario5 = new File("./timetables/" + client_id + "_Horario5-NSGAII.csv");
 
 			HttpEntity entity = MultipartEntityBuilder.create()
 					.addBinaryBody("file", horario1, ContentType.create("text/csv"), client_id + "_Horario1.csv")
 					.addBinaryBody("file", horario2, ContentType.create("text/csv"), client_id + "_Horario2.csv")
 					.addBinaryBody("file", horario3, ContentType.create("text/csv"), client_id + "_Horario3.csv")
 					.addBinaryBody("file", horario4, ContentType.create("text/csv"), client_id + "_Horario4.csv")
+					.addBinaryBody("file", horario5, ContentType.create("text/csv"), client_id + "_Horario5-NSGAII.csv")
 					.build();
 
 			HttpPost request = new HttpPost("http://localhost:3000/csv-files");
@@ -109,10 +110,12 @@ public class ConnectionHandler {
 			HttpResponse response = client.execute(request);
 			System.out.println("[Worker] Server's response: " + response.toString());
 			List<File> files = new ArrayList<File>();
+
 			files.add(horario1);
 			files.add(horario2);
 			files.add(horario3);
 			files.add(horario4);
+			files.add(horario5);
 			deleteFiles(files);
 
 		} catch (Exception e) {

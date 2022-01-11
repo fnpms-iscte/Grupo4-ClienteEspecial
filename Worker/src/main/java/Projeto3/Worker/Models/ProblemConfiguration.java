@@ -22,7 +22,8 @@ public class ProblemConfiguration extends AbstractIntegerProblem {
 		this.rooms = rooms;
 		this.lecturesNoRooms = getLecturesNoRoom(lectures);
 		setNumberOfVariables(lecturesNoRooms.size());
-		setNumberOfObjectives(3); // 3 metrics + 1 timetable overlap
+		setNumberOfObjectives(4); // 3 metrics + 1 timetable overlap
+
 		setName("ProblemConfiguration");
 
 		List<Integer> lowerLimit = new ArrayList<>(getNumberOfVariables());
@@ -48,48 +49,34 @@ public class ProblemConfiguration extends AbstractIntegerProblem {
 		for (int i = 0; i < solution.variables().size(); i++) {
 			x[i] = solution.variables().get(i);
 		}
-		System.out.println("EVALUATEEEEEEEEEEEEEE");
 		setRooms(x);
 
-//		metrics[0] = metric0.evaluate(lecturesNoRooms, rooms);
-//		
-//		metrics[1] = metric1.evaluate(lecturesNoRooms);
-//
-//		metrics[2] = metric2.evaluate(lecturesNoRooms);
-//
-//		metrics[3] = metric3.evaluate(lecturesNoRooms);
-		
-		
-		metrics[0] = metric1.evaluate(lecturesNoRooms);
+		metrics[0] = metric0.evaluate(lecturesNoRooms, rooms);
 
-		metrics[1] = metric2.evaluate(lecturesNoRooms);
+		metrics[1] = metric1.evaluate(lecturesNoRooms);
 
-		metrics[2] = metric3.evaluate(lecturesNoRooms);
-		// solution.
+		metrics[2] = metric2.evaluate(lecturesNoRooms);
 
+		metrics[3] = metric3.evaluate(lecturesNoRooms);
 		removeIntervals(x);
 
-//		solution.objectives()[0] = metrics[0];
-//		solution.objectives()[1] = metrics[1];
-//		solution.objectives()[2] = metrics[2];
-//		solution.objectives()[3] = metrics[3];
 		solution.objectives()[0] = metrics[0];
-		solution.objectives()[1] = metrics[1];
-		solution.objectives()[2] = metrics[2];
+		solution.objectives()[1] = 100 - metrics[1];
+		solution.objectives()[2] = 100 - metrics[2];
+		solution.objectives()[3] = 100 - metrics[3];
 
 		return solution;
 	}
 
 	private List<Lecture> getLecturesNoRoom(List<Lecture> lectures) {
-//		(!l.hasRoom() && !l.getCaracteristicas_da_sala_pedida_para_a_aula().equals("Não necessita de sala"))
-//		|| (l.getInicio() != null && l.getFim() != null)
 		List<Lecture> auxLectures = new ArrayList<Lecture>();
 		for (Lecture l : lectures) {
-			if (!l.getCaracteristicas_da_sala_pedida_para_a_aula().equals("Não necessita de sala") && !l.hasRoom() ) {
+			if (!l.getCaracteristicas_da_sala_pedida_para_a_aula().equals("Não necessita de sala") && !l.hasRoom()
+					&& !l.getDia_da_Semana().equals("Not Given")) {
 				auxLectures.add(l);
 			}
 		}
-		System.out.println(auxLectures.size()+"tamanho");
+
 		return auxLectures;
 	}
 

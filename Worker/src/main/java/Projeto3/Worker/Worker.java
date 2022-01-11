@@ -33,7 +33,7 @@ public class Worker {
 	private List<Room> rooms;
 	private List<Lecture> lectures;
 	private String clientID;
-	private List<String> algsnames;
+	private AlgorithmsHandler algHandler;
 
 	public JsonObject handleJson(JSONObject body) {
 		try {
@@ -43,21 +43,17 @@ public class Worker {
 		}
 		System.out.println("[Worker] Cliente ID: " + clientID);
 		JSONArray files;
-		algsnames = new ArrayList<String>();
 		try {
 			files = body.getJSONArray("files");
 			uploadFiles(files);
-			AlgorithmsHandler algHandler = new AlgorithmsHandler(rooms, lectures, clientID);
+			algHandler = new AlgorithmsHandler(rooms, lectures, clientID);
 			algHandler.runBasicAlg();
 			algHandler.runMiddleAlg();
 			algHandler.runIdealAlg();
 			// Run algorithm and returns the list of lectures to use in jMetal
 			List<Lecture> jmetalLectures = algHandler.runPerfectAlg();
-			
-			NSGAIIRunner nsgaii = new NSGAIIRunner(lectures,rooms);
-			nsgaii.runAlg();
-//			algsnames = runQuery();
-//			System.out.println(algsnames);
+
+			runQuery(jmetalLectures);
 
 			return responseToJson(body.getString("id"), algHandler.getOutput());
 
@@ -68,18 +64,23 @@ public class Worker {
 
 	}
 
-//	jMetal --- retorna as aulas sem salas
-	
-
 	private void uploadFiles(JSONArray files) {
 		JsonHandler loader = new JsonHandler(files);
 		this.rooms = loader.getRooms();
 		this.lectures = loader.getLectures();
 		System.out.println("[Worker] Both files uploaded");
 	}
-// for testing
-	private List<String> runQuery() {
-		return Query.runQuery();
+
+	private void runQuery(List<Lecture> jMetallectures) {
+		List<String> algsnames = Query.runQuery();
+		for (String s : algsnames) {
+			if (s.equalsIgnoreCase(":nsgaii")) {
+				algHandler.runNSGAII(jMetallectures, rooms);
+			} else {
+				System.out.println("[Worker] Algorithm " + s + " not defined.");
+			}
+
+		}
 	}
 
 	private JsonObject stringToJSON(String jsonString) {

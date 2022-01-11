@@ -1,10 +1,16 @@
 package Projeto3.Worker;
 
+import java.io.File;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+
 import Projeto3.Worker.Algorithms.IdealAlg;
 import Projeto3.Worker.Algorithms.MiddleAlg;
+import Projeto3.Worker.Algorithms.NSGAIIRunner;
 import Projeto3.Worker.Algorithms.PerfectAlg;
 import Projeto3.Worker.Algorithms.SimpleAlg;
 import Projeto3.Worker.Metrics.ClassCapacityOver;
@@ -126,6 +132,53 @@ public class AlgorithmsHandler {
 		output.add(new Response("Horario4", "Horario4", perfectEv.resultList, perfectEv.bestResult));
 
 		return perfectLectures;
+	}
+
+	public void runNSGAII(List<Lecture> lectures, List<Room> rooms) {
+		NSGAIIRunner nsgaii = new NSGAIIRunner(lectures, rooms);
+		nsgaii.runAlg();
+		String[] lectures_nsgaii = readCSV();
+		allocateRoomsToLectures(lectures_nsgaii);
+		List<Lecture> nsgaiiLectures = lectures;
+
+		Evaluation nsgaiiEv = new Evaluation(nsgaiiLectures, metricList);
+		System.out.println("[AlgorithmsHandler] perfect alg computed");
+		csv_generate.createCSVfile(nsgaiiLectures, clientID + "_Horario5-NSGAII");
+		System.out.println("[AlgorithmsHandler] File Horario5-NSGAII created");
+		output.add(new Response("Horario5-NSGAII", "Horario5-NSGAII", nsgaiiEv.resultList, nsgaiiEv.bestResult));
+	}
+
+	private String[] readCSV() {
+		String path = "./RESULTADOS/NSGAIIStudy/data/NSGAII/ProblemConfiguration/";
+		String[] allData = null;
+		File var = new File(path + "VAR0.csv");
+		File fun = new File(path + "FUN0.csv");
+
+		try {
+			FileReader filereader = new FileReader(var);
+			CSVReader csvReader = new CSVReaderBuilder(filereader).build();
+			allData = csvReader.readNext();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		var.delete();
+		fun.delete();
+
+		return allData;
+
+	}
+
+	private void allocateRoomsToLectures(String[] data) {
+		int count = 0;
+		for (Lecture l : lectures) {
+			if (!l.getCaracteristicas_da_sala_pedida_para_a_aula().equals("Não necessita de sala") && !l.hasRoom()
+					&& !l.getDia_da_Semana().equals("Not Given")) {
+				l.setRoom(rooms.get(count));
+				count++;
+			}
+		}
 	}
 
 }
