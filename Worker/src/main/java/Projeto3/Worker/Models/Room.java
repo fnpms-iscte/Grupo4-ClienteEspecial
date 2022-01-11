@@ -36,9 +36,10 @@ public class Room {
 	private final int n_characteristics;
 	private final ArrayList<String> characteristics;
 	private LinkedList<Interval> lectures_times_booked;
+	private final int id;
 
 	public Room(String building, String name, int normal_capacity, int exam_capacity, int n_characteristics,
-			ArrayList<String> characteristics) {
+			ArrayList<String> characteristics , int id) {
 		this.building = building;
 		this.name = name;
 		this.normal_capacity = normal_capacity;
@@ -46,6 +47,7 @@ public class Room {
 		this.n_characteristics = n_characteristics;
 		this.characteristics = characteristics;
 		this.lectures_times_booked = new LinkedList<Interval>();
+		this.id = id;
 	}
 
 	public String getBuilding() {
@@ -70,6 +72,10 @@ public class Room {
 
 	public ArrayList<String> getCharacteristics() {
 		return characteristics;
+	}
+
+	public int getId() {
+		return id;
 	}
 
 	// Check if room has the correct one
@@ -104,6 +110,11 @@ public class Room {
 
 	public void clearLecture() {
 		lectures_times_booked.clear();
+	}
+	
+	public void removeLecture(Interval interval) {
+		lectures_times_booked.remove(interval);		
+		
 	}
 
 }

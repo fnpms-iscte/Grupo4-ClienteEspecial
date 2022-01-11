@@ -9,6 +9,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.uma.jmetal.algorithm.multiobjective.nsgaii.NSGAII;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -16,6 +17,7 @@ import com.opencsv.CSVWriter;
 
 import Projeto3.Worker.Algorithms.IdealAlg;
 import Projeto3.Worker.Algorithms.MiddleAlg;
+import Projeto3.Worker.Algorithms.NSGAIIRunner;
 import Projeto3.Worker.Algorithms.PerfectAlg;
 import Projeto3.Worker.Algorithms.SimpleAlg;
 import Projeto3.Worker.Metrics.ClassCapacityOver;
@@ -51,7 +53,9 @@ public class Worker {
 			algHandler.runIdealAlg();
 			// Run algorithm and returns the list of lectures to use in jMetal
 			List<Lecture> jmetalLectures = algHandler.runPerfectAlg();
-
+			
+			NSGAIIRunner nsgaii = new NSGAIIRunner(lectures,rooms);
+			nsgaii.runAlg();
 //			algsnames = runQuery();
 //			System.out.println(algsnames);
 
@@ -65,15 +69,7 @@ public class Worker {
 	}
 
 //	jMetal --- retorna as aulas sem salas
-	private List<Lecture> getLecturesNoRoom(List<Lecture> lectures) {
-
-		List<Lecture> auxLectures = new ArrayList<Lecture>();
-		for (Lecture l : lectures) {
-			if (!l.hasRoom())
-				auxLectures.add(l);
-		}
-		return auxLectures;
-	}
+	
 
 	private void uploadFiles(JSONArray files) {
 		JsonHandler loader = new JsonHandler(files);
