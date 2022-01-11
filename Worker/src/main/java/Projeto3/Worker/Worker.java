@@ -40,7 +40,7 @@ public class Worker {
 			// Run algorithm and returns the list of lectures to use in jMetal
 			List<Lecture> jmetalLectures = algHandler.runPerfectAlg();
 
-			runQuery(jmetalLectures);
+			//runQuery(jmetalLectures);
 
 			return responseToJson(body.getString("id"), algHandler.getOutput());
 

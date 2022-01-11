@@ -71,7 +71,7 @@ public class ConnectionHandler {
 						socket.emit("results", res);
 						String client_id = res.get("id").toString();
 						client_id = client_id.substring(1, client_id.length() - 1);
-						sendPost(client_id);
+						sendPost(client_id, url);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -86,23 +86,23 @@ public class ConnectionHandler {
 		}
 	}
 
-	private void sendPost(String client_id) {
+	private void sendPost(String client_id, String url) {
 		try {
 			File horario1 = new File("./timetables/" + client_id + "_Horario1-Simple.csv");
 			File horario2 = new File("./timetables/" + client_id + "_Horario2-Middle.csv");
 			File horario3 = new File("./timetables/" + client_id + "_Horario3-Ideal.csv");
 			File horario4 = new File("./timetables/" + client_id + "_Horario4-Perfect.csv");
-			File horario5 = new File("./timetables/" + client_id + "_Horario5-NSGAII.csv");
+			//File horario5 = new File("./timetables/" + client_id + "_Horario5-NSGAII.csv");
 
 			HttpEntity entity = MultipartEntityBuilder.create()
 					.addBinaryBody("file", horario1, ContentType.create("text/csv"), client_id + "_Horario1-Simple.csv")
 					.addBinaryBody("file", horario2, ContentType.create("text/csv"), client_id + "_Horario2-Middle.csv")
 					.addBinaryBody("file", horario3, ContentType.create("text/csv"), client_id + "_Horario3-Ideal.csv")
 					.addBinaryBody("file", horario4, ContentType.create("text/csv"), client_id + "_Horario4-Perfect.csv")
-					.addBinaryBody("file", horario5, ContentType.create("text/csv"), client_id + "_Horario5-NSGAII.csv")
+					//.addBinaryBody("file", horario5, ContentType.create("text/csv"), client_id + "_Horario5-NSGAII.csv")
 					.build();
 
-			HttpPost request = new HttpPost("http://localhost:3000/csv-files");
+			HttpPost request = new HttpPost(url);
 			request.setEntity(entity);
 			System.out.println("[ConnectionHandler] Response sent");
 
@@ -115,7 +115,7 @@ public class ConnectionHandler {
 			files.add(horario2);
 			files.add(horario3);
 			files.add(horario4);
-			files.add(horario5);
+			//files.add(horario5);
 			deleteFiles(files);
 
 		} catch (Exception e) {
@@ -134,14 +134,14 @@ public class ConnectionHandler {
 		System.out.println("[Worker] Files deleted");
 	}
 
-	public static void main(String[] args) {
-		ConnectionHandler conn = new ConnectionHandler("http://localhost:3000/");
-		conn.initConnection();
-	}
-
 //	public static void main(String[] args) {
-//		ConnectionHandler conn = new ConnectionHandler("https://projeto-ads-3-grupo4.herokuapp.com/");
+//		ConnectionHandler conn = new ConnectionHandler("http://localhost:3000/");
 //		conn.initConnection();
 //	}
+
+	public static void main(String[] args) {
+		ConnectionHandler conn = new ConnectionHandler("https://projeto-ads-3-grupo4.herokuapp.com/");
+		conn.initConnection();
+	}
 
 }
