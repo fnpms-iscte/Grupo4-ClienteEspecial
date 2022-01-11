@@ -1,28 +1,14 @@
 package Projeto3.Worker;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.uma.jmetal.algorithm.multiobjective.nsgaii.NSGAII;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.opencsv.CSVWriter;
 
-import Projeto3.Worker.Algorithms.IdealAlg;
-import Projeto3.Worker.Algorithms.MiddleAlg;
-import Projeto3.Worker.Algorithms.NSGAIIRunner;
-import Projeto3.Worker.Algorithms.PerfectAlg;
-import Projeto3.Worker.Algorithms.SimpleAlg;
-import Projeto3.Worker.Metrics.ClassCapacityOver;
-import Projeto3.Worker.Metrics.ClassCapacityUnder;
-import Projeto3.Worker.Metrics.RoomAllocationChars;
 import Projeto3.Worker.Models.Lecture;
 import Projeto3.Worker.Models.Response;
 import Projeto3.Worker.Models.Room;
@@ -50,7 +36,7 @@ public class Worker {
 			algHandler.runBasicAlg();
 			algHandler.runMiddleAlg();
 			algHandler.runIdealAlg();
-			
+
 			// Run algorithm and returns the list of lectures to use in jMetal
 			List<Lecture> jmetalLectures = algHandler.runPerfectAlg();
 

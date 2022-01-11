@@ -2,8 +2,6 @@ package Projeto3.Worker;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
-
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
