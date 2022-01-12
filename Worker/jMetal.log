@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2022-01-11T23:54:47.141146600Z</date>
+  <millis>1641945287141</millis>
+  <nanos>146600</nanos>
+  <sequence>0</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>org.uma.jmetal.util.JMetalLogger</class>
+  <method>configureLoggers</method>
+  <thread>37</thread>
+  <message>Loggers configured with null</message>
+</record>
+<record>
+  <date>2022-01-11T23:54:47.161146500Z</date>
+  <millis>1641945287161</millis>
+  <nanos>146500</nanos>
+  <sequence>1</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>org.uma.jmetal.lab.experiment.component.impl.ExecuteAlgorithms</class>
+  <method>run</method>
+  <thread>37</thread>
+  <message>ExecuteAlgorithms: Preparing output directory</message>
+</record>
+<record>
+  <date>2022-01-11T23:54:47.170147Z</date>
+  <millis>1641945287170</millis>
+  <nanos>147000</nanos>
+  <sequence>2</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>org.uma.jmetal.lab.experiment.component.impl.ExecuteAlgorithms</class>
+  <method>run</method>
+  <thread>37</thread>
+  <message>ExecuteAlgorithms: there are 1 runs pending</message>
+</record>
+<record>
+  <date>2022-01-11T23:54:47.178144900Z</date>
+  <millis>1641945287178</millis>
+  <nanos>144900</nanos>
+  <sequence>3</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>org.uma.jmetal.lab.experiment.util.ExperimentAlgorithm</class>
+  <method>runAlgorithm</method>
+  <thread>37</thread>
+  <message> Running algorithm: NSGAII, problem: ProblemConfiguration, run: 0, funFile: RESULTADOS/NSGAIIStudy/data/NSGAII/ProblemConfiguration/FUN0.csv</message>
+</record>
+<record>
+  <date>2022-01-11T23:55:04.352144500Z</date>
+  <millis>1641945304352</millis>
+  <nanos>144500</nanos>
+  <sequence>4</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>org.uma.jmetal.lab.experiment.component.impl.ExecuteAlgorithms</class>
+  <method>run</method>
+  <thread>37</thread>
+  <message>Algorithm runs finished. Number of tries: 1</message>
+</record>
+<record>
+  <date>2022-01-12T00:06:02.523740200Z</date>
+  <millis>1641945962523</millis>
+  <nanos>740200</nanos>
+  <sequence>5</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>org.uma.jmetal.lab.experiment.component.impl.ExecuteAlgorithms</class>
+  <method>run</method>
+  <thread>89</thread>
+  <message>ExecuteAlgorithms: Preparing output directory</message>
+</record>
+<record>
+  <date>2022-01-12T00:06:02.524741900Z</date>
+  <millis>1641945962524</millis>
+  <nanos>741900</nanos>
+  <sequence>6</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>org.uma.jmetal.lab.experiment.component.impl.ExecuteAlgorithms</class>
+  <method>run</method>
+  <thread>89</thread>
+  <message>ExecuteAlgorithms: there are 1 runs pending</message>
+</record>
+<record>
+  <date>2022-01-12T00:06:02.525742100Z</date>
+  <millis>1641945962525</millis>
+  <nanos>742100</nanos>
+  <sequence>7</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>org.uma.jmetal.lab.experiment.util.ExperimentAlgorithm</class>
+  <method>runAlgorithm</method>
+  <thread>89</thread>
+  <message> Running algorithm: NSGAII, problem: ProblemConfiguration, run: 0, funFile: RESULTADOS/NSGAIIStudy/data/NSGAII/ProblemConfiguration/FUN0.csv</message>
+</record>
+<record>
+  <date>2022-01-12T00:06:19.174740300Z</date>
+  <millis>1641945979174</millis>
+  <nanos>740300</nanos>
+  <sequence>8</sequence>
+  <logger>org.uma.jmetal.util.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>org.uma.jmetal.lab.experiment.component.impl.ExecuteAlgorithms</class>
+  <method>run</method>
+  <thread>89</thread>
+  <message>Algorithm runs finished. Number of tries: 1</message>
+</record>
